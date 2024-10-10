@@ -4,16 +4,13 @@
     class="flex flex-center q-pa-md"
     style="background: linear-gradient(135deg, #004e92, #000428)"
   >
-    <div class="timer-container q-pa-xl q-mt-md q-mb-md">
-      <div id="timer" class="text-h1 q-mb-md text-bold text-center">
+    <div class="timer-container text-center q-pa-xl q-mt-md q-mb-md">
+      <span id="timer" class="text-h1 q-mb-md text-bold text-center">
         {{ formattedTime }}
-      </div>
-      <div
-        id="rest-count"
-        class="text-subtitle1 text-center q-mt-md text-accent"
-      >
+      </span>
+      <span id="rest-count" class="text-subtitle1 text-center q-mt-md">
         x {{ restCount }}
-      </div>
+      </span>
 
       <div class="q-gutter-md q-mt-md row justify-center">
         <q-btn
@@ -128,6 +125,16 @@ export default {
 }
 
 .text-accent {
+  color: #00d4ff;
+}
+
+.text-h1 {
+  font-size: 150px;
+  color: #00d4ff;
+}
+
+.text-subtitle1 {
+  font-size: 28px;
   color: #00d4ff;
 }
 </style>
