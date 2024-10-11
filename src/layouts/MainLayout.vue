@@ -12,8 +12,8 @@
           class="menu-btn"
           @click="toggleLeftDrawer"
         />
-        <q-toolbar-title class="navbar-title">App</q-toolbar-title>
-        <div class="version">v {{ $q.version }}</div>
+        <q-toolbar-title class="navbar-title">ChronoFit</q-toolbar-title>
+        <div class="version">v 0.0.1</div>
       </q-toolbar>
     </q-header>
 
@@ -67,7 +67,7 @@ const linksList = [
   {
     title: "Treino",
     caption: "cronômetro",
-    icon: "hours",
+    icon: "schedule",
     link: "/",
   },
 ];

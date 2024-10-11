@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="flex flex-center q-pa-md">
     <div class="timer-container text-center q-pa-lg q-mt-md q-mb-md">
-      <span id="timer" class="text-h1 q-mb-md text-bold text-center">
+      <span id="timer" class="text-h1 q-mb-md text-center">
         {{ formattedTime }}
       </span>
       <span id="rest-count" class="text-subtitle1 text-center q-mt-md">
@@ -152,5 +152,9 @@ body {
 
 .q-page {
   background: #2c2c2c; /* Fundo da página em cinza escuro */
+}
+
+.poppins-thin {
+  font-style: normal;
 }
 </style>
