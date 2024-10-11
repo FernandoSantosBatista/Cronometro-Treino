@@ -1,9 +1,5 @@
 <template>
-  <q-page
-    padding
-    class="flex flex-center q-pa-md"
-    style="background: linear-gradient(135deg, #004e92, #000428)"
-  >
+  <q-page padding class="flex flex-center q-pa-md">
     <div class="timer-container text-center q-pa-xl q-mt-md q-mb-md">
       <span id="timer" class="text-h1 q-mb-md text-bold text-center">
         {{ formattedTime }}
@@ -17,7 +13,7 @@
           outline
           icon="play_arrow"
           @click="startTimer"
-          color="primary"
+          color="white"
           rounded
           push
           size="lg"
@@ -27,7 +23,7 @@
           outline
           icon="pause"
           @click="pauseTimer"
-          color="primary"
+          color="white"
           rounded
           push
           size="lg"
@@ -37,7 +33,7 @@
           outline
           icon="refresh"
           @click="resetTimer"
-          color="primary"
+          color="white"
           rounded
           push
           size="lg"
@@ -73,8 +69,8 @@ export default {
         this.restCount++; // Incrementa o contador de descansos
         this.$q.notify({
           message: "Tempo de descanso concluído!",
-          color: "positive",
-          position: "top",
+          color: "blue",
+          position: "center",
         });
         this.isRunning = false; // Permite que o cronômetro seja reiniciado corretamente
         this.isPaused = false; // Sai do estado pausado
@@ -111,9 +107,9 @@ export default {
 
 <style>
 .timer-container {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05); /* Fundo translúcido com tom leve */
   border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra suave em preto */
 }
 
 .timer-button {
@@ -122,19 +118,42 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #333; /* Botão em tom de cinza escuro */
+  color: white;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.timer-button:hover {
+  background-color: #555; /* Tom de cinza mais claro ao passar o mouse */
+}
+
+.timer-button:active {
+  background-color: #222; /* Tom mais escuro ao clicar */
 }
 
 .text-accent {
-  color: #00d4ff;
+  color: #ccc; /* Cinza claro */
 }
 
 .text-h1 {
   font-size: 150px;
-  color: #00d4ff;
+  color: #f0f0f0; /* Branco acinzentado para contraste suave */
+  letter-spacing: 2px;
 }
 
 .text-subtitle1 {
   font-size: 28px;
-  color: #00d4ff;
+  color: #aaa; /* Cinza médio para o contador de descansos */
+}
+
+body {
+  background-color: #1c1c1c; /* Fundo em preto puro */
+  color: white; /* Texto padrão em branco */
+  font-family: "Poppins", sans-serif;
+}
+
+.q-page {
+  background: #2c2c2c; /* Fundo da página em cinza escuro */
 }
 </style>
