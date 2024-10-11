@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="flex flex-center q-pa-md">
-    <div class="timer-container text-center q-pa-xl q-mt-md q-mb-md">
+    <div class="timer-container text-center q-pa-lg q-mt-md q-mb-md">
       <span id="timer" class="text-h1 q-mb-md text-bold text-center">
         {{ formattedTime }}
       </span>
@@ -16,7 +16,7 @@
           color="white"
           rounded
           push
-          size="lg"
+          size="md"
           class="timer-button"
         />
         <q-btn
@@ -26,7 +26,7 @@
           color="white"
           rounded
           push
-          size="lg"
+          size="md"
           class="timer-button"
         />
         <q-btn
@@ -36,7 +36,7 @@
           color="white"
           rounded
           push
-          size="lg"
+          size="md"
           class="timer-button"
         />
       </div>
@@ -110,11 +110,12 @@ export default {
   background: rgba(255, 255, 255, 0.05); /* Fundo translúcido com tom leve */
   border-radius: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra suave em preto */
+  padding: 60px; /* Ajuste no padding */
 }
 
 .timer-button {
-  width: 70px;
-  height: 70px;
+  width: 60px; /* Aumentado para tamanho médio */
+  height: 60px; /* Aumentado para tamanho médio */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -132,18 +133,14 @@ export default {
   background-color: #222; /* Tom mais escuro ao clicar */
 }
 
-.text-accent {
-  color: #ccc; /* Cinza claro */
-}
-
 .text-h1 {
-  font-size: 150px;
+  font-size: 130px; /* Aumentei o tamanho do número */
   color: #f0f0f0; /* Branco acinzentado para contraste suave */
   letter-spacing: 2px;
 }
 
 .text-subtitle1 {
-  font-size: 28px;
+  font-size: 24px; /* Aumentei o tamanho do subtítulo */
   color: #aaa; /* Cinza médio para o contador de descansos */
 }
 
