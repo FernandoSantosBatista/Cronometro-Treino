@@ -132,7 +132,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-around; /* Distribui os botões uniformemente */
-  padding: 0 20px; /* Pequeno espaçamento lateral */
+  padding: 20px 20px 40px 20px; /* Pequeno espaçamento lateral */
 }
 
 .timer-button {
