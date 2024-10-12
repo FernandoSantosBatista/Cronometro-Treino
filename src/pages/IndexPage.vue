@@ -59,7 +59,7 @@ export default {
         this.$q.notify({
           message: "Tempo de descanso concluído!",
           color: "blue",
-          position: "center",
+          position: "top",
         });
         this.isRunning = false;
         this.isPaused = false;
@@ -108,6 +108,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 90px;
   font-family: "Poppins", sans-serif;
 }
 
