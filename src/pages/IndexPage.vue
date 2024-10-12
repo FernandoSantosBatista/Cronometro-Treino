@@ -1,29 +1,16 @@
 <template>
   <q-page padding class="flex flex-center q-pa-md">
-    <div class="timer-container text-center q-pa-lg q-mt-md q-mb-md">
-      <span id="timer" class="text-h1 q-mb-md text-center">
-        {{ formattedTime }}
-      </span>
-      <span id="rest-count" class="text-subtitle1 text-center q-mt-md">
-        x {{ restCount }}
-      </span>
+    <div class="timer-container text-center">
+      <div class="timer-row">
+        <span id="timer">{{ formattedTime }}</span>
+        <span id="rest-count">x {{ restCount }}</span>
+      </div>
 
-      <div class="q-gutter-md q-mt-md row justify-center">
+      <div class="button-container">
         <q-btn
           outline
-          icon="play_arrow"
-          @click="startTimer"
-          color="white"
-          rounded
-          push
-          size="md"
-          class="timer-button"
-        />
-        <q-btn
-          outline
-          icon="pause"
-          @click="pauseTimer"
-          color="white"
+          :icon="playPauseIcon"
+          @click="togglePlayPause"
           rounded
           push
           size="md"
@@ -33,7 +20,6 @@
           outline
           icon="refresh"
           @click="resetTimer"
-          color="white"
           rounded
           push
           size="md"
@@ -48,8 +34,8 @@
 export default {
   data() {
     return {
-      time: 5, // 60 segundos de descanso
-      restCount: 0, // Contador de descansos
+      time: 5, // O tempo inicial
+      restCount: 0,
       interval: null,
       isRunning: false, // Verifica se o cronômetro está rodando
       isPaused: false, // Verifica se o cronômetro está pausado
@@ -59,6 +45,9 @@ export default {
     formattedTime() {
       return this.time < 10 ? "0" + this.time : this.time;
     },
+    playPauseIcon() {
+      return this.isRunning && !this.isPaused ? "pause" : "play_arrow";
+    },
   },
   methods: {
     updateTimer() {
@@ -66,33 +55,40 @@ export default {
         this.time--;
       } else {
         clearInterval(this.interval);
-        this.restCount++; // Incrementa o contador de descansos
+        this.restCount++;
         this.$q.notify({
           message: "Tempo de descanso concluído!",
           color: "blue",
           position: "center",
         });
-        this.isRunning = false; // Permite que o cronômetro seja reiniciado corretamente
-        this.isPaused = false; // Sai do estado pausado
-      }
-    },
-    startTimer() {
-      if (!this.isRunning && !this.isPaused) {
-        this.time = 5; // Reinicia o tempo para 60 segundos a cada novo início
-        clearInterval(this.interval); // Garante que não haverá múltiplos timers em execução
-        this.interval = setInterval(this.updateTimer, 1000);
-        this.isRunning = true;
-      } else if (this.isPaused) {
-        clearInterval(this.interval);
-        this.interval = setInterval(this.updateTimer, 1000);
+        this.isRunning = false;
         this.isPaused = false;
       }
     },
-    pauseTimer() {
-      if (this.isRunning && !this.isPaused) {
-        clearInterval(this.interval);
-        this.isPaused = true;
+    togglePlayPause() {
+      if (!this.isRunning) {
+        this.startTimer();
+      } else if (this.isPaused) {
+        this.resumeTimer();
+      } else {
+        this.pauseTimer();
       }
+    },
+    startTimer() {
+      this.time = 5; // Reinicia o tempo
+      clearInterval(this.interval);
+      this.interval = setInterval(this.updateTimer, 1000);
+      this.isRunning = true;
+      this.isPaused = false;
+    },
+    resumeTimer() {
+      clearInterval(this.interval);
+      this.interval = setInterval(this.updateTimer, 1000);
+      this.isPaused = false;
+    },
+    pauseTimer() {
+      clearInterval(this.interval);
+      this.isPaused = true;
     },
     resetTimer() {
       clearInterval(this.interval);
@@ -107,54 +103,49 @@ export default {
 
 <style>
 .timer-container {
-  background: rgba(255, 255, 255, 0.05); /* Fundo translúcido com tom leve */
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra suave em preto */
-  padding: 60px; /* Ajuste no padding */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.timer-row {
+  display: flex;
+  align-items: baseline; /* Alinha os dois elementos na mesma linha */
+  justify-content: center; /* Centraliza os elementos horizontalmente */
+}
+
+#timer {
+  font-size: 120px; /* Tamanho grande para o número */
+}
+
+#rest-count {
+  font-size: 32px; /* Tamanho menor para o contador */
+  margin-left: 15px; /* Espaçamento entre o número e o contador */
+}
+
+.button-container {
+  position: fixed;
+  bottom: 20px; /* Posiciona os botões na parte inferior da tela */
+  width: 100%;
+  display: flex;
+  justify-content: space-around; /* Distribui os botões uniformemente */
+  padding: 0 20px; /* Pequeno espaçamento lateral */
 }
 
 .timer-button {
-  width: 60px; /* Aumentado para tamanho médio */
-  height: 60px; /* Aumentado para tamanho médio */
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #333; /* Botão em tom de cinza escuro */
-  color: white;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-.timer-button:hover {
-  background-color: #555; /* Tom de cinza mais claro ao passar o mouse */
-}
-
-.timer-button:active {
-  background-color: #222; /* Tom mais escuro ao clicar */
-}
-
-.text-h1 {
-  font-size: 130px; /* Aumentei o tamanho do número */
-  color: #f0f0f0; /* Branco acinzentado para contraste suave */
-  letter-spacing: 2px;
-}
-
-.text-subtitle1 {
-  font-size: 24px; /* Aumentei o tamanho do subtítulo */
-  color: #aaa; /* Cinza médio para o contador de descansos */
 }
 
 body {
   background-color: #1c1c1c; /* Fundo em preto puro */
   color: white; /* Texto padrão em branco */
   font-family: "Poppins", sans-serif;
-}
-
-.q-page {
-  background: #2c2c2c; /* Fundo da página em cinza escuro */
-}
-
-.poppins-thin {
-  font-style: normal;
 }
 </style>
