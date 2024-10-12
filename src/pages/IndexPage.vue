@@ -9,8 +9,8 @@
       <div class="button-container">
         <q-btn
           outline
-          :icon="playPauseIcon"
-          @click="togglePlayPause"
+          icon="refresh"
+          @click="resetTimer"
           rounded
           push
           size="md"
@@ -18,8 +18,8 @@
         />
         <q-btn
           outline
-          icon="refresh"
-          @click="resetTimer"
+          :icon="playPauseIcon"
+          @click="togglePlayPause"
           rounded
           push
           size="md"
@@ -118,7 +118,7 @@ export default {
 }
 
 #timer {
-  font-size: 120px; /* Tamanho grande para o número */
+  font-size: 118px; /* Tamanho grande para o número */
 }
 
 #rest-count {
@@ -132,7 +132,7 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-around; /* Distribui os botões uniformemente */
-  padding: 20px 20px 40px 20px; /* Pequeno espaçamento lateral */
+  padding: 20px 32px 20px 32px; /* Pequeno espaçamento lateral */
 }
 
 .timer-button {
