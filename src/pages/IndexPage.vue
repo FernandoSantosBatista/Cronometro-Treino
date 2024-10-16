@@ -1,6 +1,9 @@
 <template>
   <q-page padding class="flex flex-center q-pa-md">
     <div class="timer-container text-center">
+      <!-- Cronômetro de treino total no topo (00:00:00) -->
+      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
+
       <!-- Seletor para escolher o tempo do cronômetro -->
       <q-select
         v-model="selectedTime"
@@ -11,9 +14,12 @@
         class="time-selector"
       />
 
+      <!-- Cronômetro principal (00:00) -->
       <div class="timer-row">
         <span id="timer">{{ formattedTime }}</span>
-        <span id="rest-count">x {{ restCount }}</span>
+      </div>
+      <div>
+        <span id="rest-count"> Séries conluidas x {{ restCount }}</span>
       </div>
 
       <div class="button-container">
@@ -47,12 +53,16 @@ import { useQuasar } from "quasar";
 export default {
   setup() {
     const $q = useQuasar();
-    const selectedTime = ref(null);
-    const timeRemaining = ref(0);
-    const timerRunning = ref(false);
-    const timerPaused = ref(false);
+    const selectedTime = ref(null); // Tempo selecionado
+    const timeRemaining = ref(0); // Tempo restante
+    const timerRunning = ref(false); // Indicador se o cronômetro está em execução
+    const timerPaused = ref(false); // Indicador se o cronômetro está pausado
     let timer = null;
-    const restCount = ref(0);
+    const restCount = ref(0); // Contador de ciclos de descanso
+
+    // Novo cronômetro para o topo da tela
+    const totalTime = ref(0); // Tempo total de treino
+    let totalTimer = null; // Referência do cronômetro total
 
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
@@ -62,10 +72,23 @@ export default {
       { label: "5 Minutos", value: 300 },
     ];
 
+    // Computed para formatar o tempo restante no formato 00:00
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
-      return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      return `${minutes < 10 ? "0" : ""}${minutes}:${
+        seconds < 10 ? "0" : ""
+      }${seconds}`;
+    });
+
+    // Computed para formatar o tempo total de treino no formato 00:00:00
+    const formattedTotalTime = computed(() => {
+      const hours = Math.floor(totalTime.value / 3600);
+      const minutes = Math.floor((totalTime.value % 3600) / 60);
+      const seconds = totalTime.value % 60;
+      return `${hours < 10 ? "0" : ""}${hours}:${
+        minutes < 10 ? "0" : ""
+      }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
     const playPauseIcon = computed(() => {
@@ -77,6 +100,13 @@ export default {
         timeRemaining.value = selectedTime.value.value;
         timerRunning.value = true;
         timerPaused.value = false;
+
+        // Inicia cronômetro do tempo de treino
+        if (!totalTimer) {
+          totalTimer = setInterval(() => {
+            totalTime.value++;
+          }, 1000);
+        }
 
         timer = setInterval(() => {
           if (timeRemaining.value > 0) {
@@ -129,6 +159,7 @@ export default {
 
     onBeforeUnmount(() => {
       stopTimer();
+      clearInterval(totalTimer); // Limpa o cronômetro total ao desmontar
     });
 
     return {
@@ -143,6 +174,7 @@ export default {
       togglePlayPause,
       resetTimer,
       startTimer,
+      formattedTotalTime,
     };
   },
 };
@@ -156,46 +188,73 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 90px;
+  margin-bottom: 50px;
+  padding: 20px;
   font-family: "Poppins", sans-serif;
 }
 
-.timer-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
+/* Estilo do cronômetro total */
+.formatted-total-time {
+  font-size: 28px;
+  color: white;
+  margin-bottom: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Seletor de tempo */
+.time-selector {
+  margin-bottom: 25px;
+  width: 250px;
+  background-color: #2c2c2c;
+}
+
+.time-selector .q-select__control {
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.time-selector .q-select__control:hover {
+  background-color: #2c2c2c;
+}
+
+.q-field__label {
+  font-size: 16px;
+  color: white;
 }
 
 /* Estilo do cronômetro */
 #timer {
-  font-size: 110px;
+  font-size: 120px;
   font-weight: bold;
   color: white;
+  margin-bottom: 20px;
 }
 
 #rest-count {
-  font-size: 32px;
-  margin-left: 15px;
+  font-size: 30px;
   color: #bbb;
+  margin-bottom: 30px;
 }
 
 /* Botões */
 .button-container {
-  position: fixed;
-  bottom: 20px;
-  width: 100%;
   display: flex;
-  justify-content: space-around;
-  padding: 20px 32px;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 30px;
 }
 
 .timer-button {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid white;
+  border: 2px solid white;
+  border-radius: 50%;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -205,43 +264,6 @@ export default {
   border-color: white;
 }
 
-/* Estilos do seletor de tempo */
-.time-selector {
-  margin-bottom: 20px;
-  width: 200px;
-  background-color: #1c1c1c;
-  color: white;
-}
-
-.time-selector .q-select__control {
-  border: 1px solid #bbb;
-  border-radius: 5px;
-}
-
-.time-selector .q-select__control:hover {
-  background-color: #2c2c2c;
-}
-
-.time-selector .q-select__menu {
-  background-color: #1c1c1c;
-  color: white;
-}
-
-.q-select__dropdown-icon {
-  color: white;
-}
-
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
-  color: white;
-}
-
-.q-field__label {
-  color: white;
-}
-
 /* Responsividade */
 @media (max-width: 600px) {
   #timer {
@@ -249,9 +271,16 @@ export default {
   }
 
   .timer-button {
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
   }
+}
+
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
 }
 
 .q-select__dialog {
