@@ -1,10 +1,13 @@
 <template>
-  <q-page padding class="flex flex-center q-pa-md">
-    <div class="timer-container text-center">
-      <!-- Cronômetro de treino total no topo (00:00:00) -->
+  <q-page class="flex flex-center q-pa-md q-col-gutter-md">
+    <!-- Cronômetro de treino total no topo (00:00:00) -->
+    <div class="total-time-container">
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
+    </div>
 
-      <!-- Seletor para escolher o tempo do cronômetro -->
+    <!-- Seção central com seletor de tempo e cronômetro -->
+    <div class="central-container">
+      <!-- Seletor de tempo -->
       <q-select
         v-model="selectedTime"
         :options="timeOptions"
@@ -18,10 +21,11 @@
       <div class="timer-row">
         <span id="timer">{{ formattedTime }}</span>
       </div>
-      <div>
-        <span id="rest-count"> Séries conluidas x {{ restCount }}</span>
-      </div>
 
+      <!-- Contador de séries -->
+      <div id="rest-count">Séries concluídas: {{ restCount }}</div>
+
+      <!-- Botões de controle -->
       <div class="button-container">
         <q-btn
           outline
@@ -182,100 +186,56 @@ export default {
 
 <style>
 /* Layout geral */
-.timer-container {
-  flex: 1;
+.total-time-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.formatted-total-time {
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+}
+
+.central-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 50px;
-  padding: 20px;
-  font-family: "Poppins", sans-serif;
+  justify-content: center;
+  width: 100%;
 }
 
-/* Estilo do cronômetro total */
-.formatted-total-time {
-  font-size: 28px;
-  color: white;
-  margin-bottom: 30px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-/* Seletor de tempo */
 .time-selector {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   width: 250px;
-  background-color: #2c2c2c;
 }
 
-.time-selector .q-select__control {
-  border: 1px solid #bbb;
-  border-radius: 8px;
-  padding: 10px;
-}
-
-.time-selector .q-select__control:hover {
-  background-color: #2c2c2c;
-}
-
-.q-field__label {
-  font-size: 16px;
-  color: white;
-}
-
-/* Estilo do cronômetro */
-#timer {
-  font-size: 120px;
-  font-weight: bold;
+.timer-row {
+  font-size: 100px;
   color: white;
   margin-bottom: 20px;
 }
 
 #rest-count {
-  font-size: 30px;
-  color: #bbb;
-  margin-bottom: 30px;
+  font-size: 24px;
+  color: white;
+  margin-bottom: 20px;
 }
 
-/* Botões */
 .button-container {
-  position: fixed;
-  bottom: 20px;
-  width: 100%;
   display: flex;
   justify-content: space-around;
-  padding: 20px 32px;
+  width: 100%;
 }
 
 .timer-button {
   width: 60px;
   height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid white;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.timer-button:hover {
-  background-color: white;
-  color: white;
-  border-color: white;
-}
-
-/* Responsividade */
-@media (max-width: 600px) {
-  #timer {
-    font-size: 80px;
-  }
-
-  .timer-button {
-    width: 55px;
-    height: 55px;
-  }
-}
-
+/* Manter esquema de cores */
 .q-field__native,
 .q-field__prefix,
 .q-field__suffix,
