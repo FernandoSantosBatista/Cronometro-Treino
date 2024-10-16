@@ -1,11 +1,20 @@
 <template>
-  <q-page class="flex flex-center q-pa-md q-col-gutter-md">
-    <!-- Cronômetro de treino total no topo (00:00:00) -->
+  <q-page class="q-pa-md flex flex-column justify-between">
+    <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
+      <q-btn
+        flat
+        round
+        dense
+        icon="pause"
+        @click="resetTotalTime"
+        size="20px"
+        class="total-time-reset-btn"
+      />
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
-    <!-- Seção central com seletor de tempo e cronômetro -->
+    <!-- Seção central com seletor de tempo, cronômetro e contador de séries -->
     <div class="central-container">
       <!-- Seletor de tempo -->
       <q-select
@@ -24,28 +33,28 @@
 
       <!-- Contador de séries -->
       <div id="rest-count">Séries concluídas: {{ restCount }}</div>
+    </div>
 
-      <!-- Botões de controle -->
-      <div class="button-container">
-        <q-btn
-          outline
-          icon="refresh"
-          @click="resetTimer"
-          rounded
-          push
-          size="md"
-          class="timer-button"
-        />
-        <q-btn
-          outline
-          :icon="playPauseIcon"
-          @click="togglePlayPause"
-          rounded
-          push
-          size="md"
-          class="timer-button"
-        />
-      </div>
+    <!-- Seção do rodapé com botões de controle -->
+    <div class="button-container">
+      <q-btn
+        outline
+        icon="refresh"
+        @click="resetTimer"
+        rounded
+        push
+        size="md"
+        class="timer-button"
+      />
+      <q-btn
+        outline
+        :icon="playPauseIcon"
+        @click="togglePlayPause"
+        rounded
+        push
+        size="md"
+        class="timer-button"
+      />
     </div>
   </q-page>
 </template>
@@ -57,16 +66,14 @@ import { useQuasar } from "quasar";
 export default {
   setup() {
     const $q = useQuasar();
-    const selectedTime = ref(null); // Tempo selecionado
-    const timeRemaining = ref(0); // Tempo restante
-    const timerRunning = ref(false); // Indicador se o cronômetro está em execução
-    const timerPaused = ref(false); // Indicador se o cronômetro está pausado
+    const selectedTime = ref(null);
+    const timeRemaining = ref(0);
+    const timerRunning = ref(false);
+    const timerPaused = ref(false);
     let timer = null;
-    const restCount = ref(0); // Contador de ciclos de descanso
-
-    // Novo cronômetro para o topo da tela
-    const totalTime = ref(0); // Tempo total de treino
-    let totalTimer = null; // Referência do cronômetro total
+    const restCount = ref(0);
+    const totalTime = ref(0);
+    let totalTimer = null;
 
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
@@ -76,7 +83,6 @@ export default {
       { label: "5 Minutos", value: 300 },
     ];
 
-    // Computed para formatar o tempo restante no formato 00:00
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
@@ -85,7 +91,6 @@ export default {
       }${seconds}`;
     });
 
-    // Computed para formatar o tempo total de treino no formato 00:00:00
     const formattedTotalTime = computed(() => {
       const hours = Math.floor(totalTime.value / 3600);
       const minutes = Math.floor((totalTime.value % 3600) / 60);
@@ -100,12 +105,13 @@ export default {
     });
 
     const startTimer = () => {
-      if (selectedTime.value) {
+      if (selectedTime.value && !timerRunning.value) {
+        restCount.value++;
+
         timeRemaining.value = selectedTime.value.value;
         timerRunning.value = true;
         timerPaused.value = false;
 
-        // Inicia cronômetro do tempo de treino
         if (!totalTimer) {
           totalTimer = setInterval(() => {
             totalTime.value++;
@@ -117,7 +123,6 @@ export default {
             timeRemaining.value--;
           } else {
             stopTimer();
-            restCount.value++;
             $q.notify({
               message: "Tempo de descanso concluído!",
               color: "primary",
@@ -144,7 +149,21 @@ export default {
     };
 
     const resumeTimer = () => {
-      startTimer();
+      timerRunning.value = true;
+      timerPaused.value = false;
+
+      timer = setInterval(() => {
+        if (timeRemaining.value > 0) {
+          timeRemaining.value--;
+        } else {
+          stopTimer();
+          $q.notify({
+            message: "Tempo de descanso concluído!",
+            color: "primary",
+            position: "top",
+          });
+        }
+      }, 1000);
     };
 
     const resetTimer = () => {
@@ -161,9 +180,15 @@ export default {
       timerPaused.value = false;
     };
 
+    const resetTotalTime = () => {
+      clearInterval(totalTimer);
+      totalTime.value = 0;
+      totalTimer = null;
+    };
+
     onBeforeUnmount(() => {
       stopTimer();
-      clearInterval(totalTimer); // Limpa o cronômetro total ao desmontar
+      clearInterval(totalTimer);
     });
 
     return {
@@ -179,63 +204,81 @@ export default {
       resetTimer,
       startTimer,
       formattedTotalTime,
+      resetTotalTime, // Retorna função para resetar o tempo total
     };
   },
 };
 </script>
 
 <style>
-/* Layout geral */
+/* Seção do topo (total-time-container) */
 .total-time-container {
   width: 100%;
   display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  justify-content: right;
+  padding: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.total-time-reset-btn {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
 }
 
 .formatted-total-time {
-  font-size: 24px;
-  color: white;
+  font-size: 28px;
   font-weight: bold;
+  color: white;
+  margin-right: 8px;
 }
 
+/* Seção central (central-container) */
 .central-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
+  background-color: #333;
+  border-radius: 10px;
 }
 
 .time-selector {
   margin-bottom: 20px;
-  width: 250px;
+  width: 80%;
 }
 
 .timer-row {
-  font-size: 100px;
+  font-size: 80px;
   color: white;
   margin-bottom: 20px;
 }
 
 #rest-count {
-  font-size: 24px;
+  font-size: 20px;
   color: white;
   margin-bottom: 20px;
 }
 
+/* Seção do rodapé (button-container) */
 .button-container {
   display: flex;
   justify-content: space-around;
   width: 100%;
+  padding: 20px;
+  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
 }
 
 .timer-button {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
 }
 
-/* Manter esquema de cores */
+/* Estilo adicional */
 .q-field__native,
 .q-field__prefix,
 .q-field__suffix,
