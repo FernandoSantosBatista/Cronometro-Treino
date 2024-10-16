@@ -19,7 +19,7 @@
         <span id="timer">{{ formattedTime }}</span>
       </div>
       <div>
-        <span id="rest-count"> Séries conluidas x {{ restCount }}</span>
+        <span id="rest-count"> Séries concluídas: {{ restCount }}</span>
       </div>
 
       <div class="button-container">
@@ -183,21 +183,22 @@ export default {
 <style>
 /* Layout geral */
 .timer-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; /* Centraliza verticalmente */
   align-items: center;
-  margin-bottom: 50px;
   padding: 20px;
   font-family: "Poppins", sans-serif;
+  position: relative;
+  height: 90vh; /* Preenche a altura da tela */
 }
 
 /* Estilo do cronômetro total */
 .formatted-total-time {
+  position: absolute;
+  top: 10px; /* Fixa no topo da tela */
   font-size: 28px;
   color: white;
-  margin-bottom: 30px;
   font-weight: bold;
   letter-spacing: 1px;
 }
@@ -229,38 +230,38 @@ export default {
   font-size: 120px;
   font-weight: bold;
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 #rest-count {
   font-size: 30px;
   color: #bbb;
-  margin-bottom: 30px;
+  margin-top: 10px;
 }
 
 /* Botões */
 .button-container {
-  display: flex;
-  justify-content: space-between;
+  position: fixed;
+  bottom: 20px;
   width: 100%;
-  max-width: 400px;
-  margin-top: 30px;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 32px;
 }
 
 .timer-button {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 2px solid white;
-  border-radius: 50%;
+  border: 1px solid white;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .timer-button:hover {
   background-color: white;
-  color: #1c1c1c;
+  color: white;
   border-color: white;
 }
 
