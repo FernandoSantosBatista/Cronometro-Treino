@@ -19,7 +19,7 @@
         <span id="timer">{{ formattedTime }}</span>
       </div>
       <div>
-        <span id="rest-count"> Séries concluídas: {{ restCount }}</span>
+        <span id="rest-count"> Séries conluidas x {{ restCount }}</span>
       </div>
 
       <div class="button-container">
@@ -183,22 +183,21 @@ export default {
 <style>
 /* Layout geral */
 .timer-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centraliza verticalmente */
+  justify-content: center;
   align-items: center;
+  margin-bottom: 50px;
   padding: 20px;
   font-family: "Poppins", sans-serif;
-  position: relative;
-  height: 90vh; /* Preenche a altura da tela */
 }
 
 /* Estilo do cronômetro total */
 .formatted-total-time {
-  position: absolute;
-  top: 10px; /* Fixa no topo da tela */
   font-size: 28px;
   color: white;
+  margin-bottom: 30px;
   font-weight: bold;
   letter-spacing: 1px;
 }
@@ -230,13 +229,13 @@ export default {
   font-size: 120px;
   font-weight: bold;
   color: white;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 #rest-count {
   font-size: 30px;
   color: #bbb;
-  margin-top: 10px;
+  margin-bottom: 30px;
 }
 
 /* Botões */
