@@ -139,17 +139,49 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: "generateSW", // or 'injectManifest'
-      injectPwaMetaTags: true,
-      swFilename: "sw.js",
-      manifestFilename: "manifest.json",
-      useCredentialsForManifestTag: false,
-      // useFilenameHashes: true,
-      // extendGenerateSWOptions (cfg) {}
-      // extendInjectManifestOptions (cfg) {},
-      // extendManifestJson (json) {}
-      // extendPWACustomSWConf (esbuildConf) {}
+      workboxMode: "generateSW", // 'generateSW' ou 'injectManifest'
+      manifest: {
+        name: `ChronoFit`,
+        short_name: `ChronoFit`,
+        description: `Um cronômetro para seus treinos`,
+        display: "standalone", // Permite que o app seja executado em tela cheia
+        background_color: "#1c1c1c",
+        theme_color: "#1c1c1c",
+        icons: [
+          {
+            src: "icons/icon-128x128.png",
+            sizes: "128x128",
+            type: "image/png",
+          },
+          {
+            src: "icons/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "icons/icon-256x256.png",
+            sizes: "256x256",
+            type: "image/png",
+          },
+          {
+            src: "icons/icon-384x384.png",
+            sizes: "384x384",
+            type: "image/png",
+          },
+          {
+            src: "icons/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
+      },
     },
+
+    // useFilenameHashes: true,
+    // extendGenerateSWOptions (cfg) {}
+    // extendInjectManifestOptions (cfg) {},
+    // extendManifestJson (json) {}
+    // extendPWACustomSWConf (esbuildConf) {}
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
     cordova: {
