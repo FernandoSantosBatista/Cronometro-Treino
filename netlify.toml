@@ -1,7 +1,6 @@
-# netlify.toml
 [build]
-  publish = "dist"  # Caminho onde o Quasar gera a versão de produção
-  command = "quasar build"  # Comando para construir o app
+  command = "quasar build -m pwa"
+  publish = "dist/pwa"  # Isso garante que a versão PWA seja publicada
 
 [[headers]]
   for = "/*"
