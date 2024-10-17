@@ -105,7 +105,16 @@ export default {
     });
 
     const startTimer = () => {
-      if (selectedTime.value && !timerRunning.value) {
+      if (!selectedTime.value) {
+        $q.notify({
+          message: "Selecione o tempo!",
+          color: "negative",
+          position: "top",
+        });
+        return; // Não iniciar o timer se o tempo não for selecionado
+      }
+
+      if (!timerRunning.value) {
         restCount.value++;
 
         timeRemaining.value = selectedTime.value.value;
