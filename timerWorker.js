@@ -3,15 +3,14 @@ let interval = null;
 
 self.onmessage = function (e) {
   const { command, selectedTime } = e.data;
-  
+
   if (command === 'start') {
     timeRemaining = selectedTime;
     interval = setInterval(() => {
-      timeRemaining -= 1;
+      timeRemaining--;
       if (timeRemaining <= 0) {
         clearInterval(interval);
       }
-      // Envia a atualização do cronômetro de volta ao thread principal
       postMessage({ timeRemaining });
     }, 1000);
   } else if (command === 'pause') {
