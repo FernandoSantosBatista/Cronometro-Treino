@@ -64,7 +64,7 @@ import { ref, computed, onBeforeUnmount } from "vue";
 import { useQuasar } from "quasar";
 
 // Importa o Web Worker
-const timerWorker = new Worker(new URL('../timerWorker.js', import.meta.url));
+const timerWorker = new Worker(new URL('../../timerWorker.js', import.meta.url));
 
 export default {
   setup() {
