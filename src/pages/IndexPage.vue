@@ -63,6 +63,9 @@
 import { ref, computed, onBeforeUnmount } from "vue";
 import { useQuasar } from "quasar";
 
+// Importa o Web Worker
+const timerWorker = new Worker(new URL('../timerWorker.js', import.meta.url));
+
 export default {
   setup() {
     const $q = useQuasar();
@@ -70,7 +73,6 @@ export default {
     const timeRemaining = ref(0);
     const timerRunning = ref(false);
     const timerPaused = ref(false);
-    let timer = null;
     const restCount = ref(0);
     const totalTime = ref(0);
     let totalTimer = null;
@@ -86,18 +88,14 @@ export default {
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
-      return `${minutes < 10 ? "0" : ""}${minutes}:${
-        seconds < 10 ? "0" : ""
-      }${seconds}`;
+      return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
     const formattedTotalTime = computed(() => {
       const hours = Math.floor(totalTime.value / 3600);
       const minutes = Math.floor((totalTime.value % 3600) / 60);
       const seconds = totalTime.value % 60;
-      return `${hours < 10 ? "0" : ""}${hours}:${
-        minutes < 10 ? "0" : ""
-      }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
     const playPauseIcon = computed(() => {
@@ -111,7 +109,7 @@ export default {
           color: "negative",
           position: "top",
         });
-        return; // Não iniciar o timer se o tempo não for selecionado
+        return;
       }
 
       if (!timerRunning.value) {
@@ -127,18 +125,8 @@ export default {
           }, 1000);
         }
 
-        timer = setInterval(() => {
-          if (timeRemaining.value > 0) {
-            timeRemaining.value--;
-          } else {
-            stopTimer();
-            $q.notify({
-              message: "Tempo de descanso concluído!",
-              color: "primary",
-              position: "top",
-            });
-          }
-        }, 1000);
+        // Inicia o cronômetro no Web Worker
+        timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
 
@@ -153,40 +141,24 @@ export default {
     };
 
     const pauseTimer = () => {
-      clearInterval(timer);
+      // Pausa o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'pause' });
       timerPaused.value = true;
     };
 
     const resumeTimer = () => {
+      // Retoma o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'start', selectedTime: timeRemaining.value });
       timerRunning.value = true;
       timerPaused.value = false;
-
-      timer = setInterval(() => {
-        if (timeRemaining.value > 0) {
-          timeRemaining.value--;
-        } else {
-          stopTimer();
-          $q.notify({
-            message: "Tempo de descanso concluído!",
-            color: "primary",
-            position: "top",
-          });
-        }
-      }, 1000);
     };
 
     const resetTimer = () => {
-      clearInterval(timer);
+      // Reseta o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
       timerRunning.value = false;
       timerPaused.value = false;
-      timeRemaining.value = selectedTime.value ? selectedTime.value.value : 0;
       restCount.value = 0;
-    };
-
-    const stopTimer = () => {
-      clearInterval(timer);
-      timerRunning.value = false;
-      timerPaused.value = false;
     };
 
     const resetTotalTime = () => {
@@ -195,8 +167,21 @@ export default {
       totalTimer = null;
     };
 
+    // Recebe mensagens do Web Worker
+    timerWorker.onmessage = function (e) {
+      timeRemaining.value = e.data.timeRemaining;
+
+      if (timeRemaining.value <= 0) {
+        timerRunning.value = false;
+        $q.notify({
+          message: "Tempo de descanso concluído!",
+          color: "primary",
+          position: "top",
+        });
+      }
+    };
+
     onBeforeUnmount(() => {
-      stopTimer();
       clearInterval(totalTimer);
     });
 
@@ -213,10 +198,12 @@ export default {
       resetTimer,
       startTimer,
       formattedTotalTime,
-      resetTotalTime, // Retorna função para resetar o tempo total
+      resetTotalTime,
     };
   },
 };
+
+
 </script>
 
 <style>
