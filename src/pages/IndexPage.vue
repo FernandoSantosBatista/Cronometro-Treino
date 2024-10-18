@@ -60,8 +60,11 @@
 </template>
 
 <script>
-import { ref, computed, onBeforeUnmount } from "vue";
+  import { ref, computed, onBeforeUnmount } from "vue";
 import { useQuasar } from "quasar";
+
+// Importa o Web Worker
+const timerWorker = new Worker(new URL('../../timerWorker.js', import.meta.url));
 
 export default {
   setup() {
@@ -70,35 +73,9 @@ export default {
     const timeRemaining = ref(0);
     const timerRunning = ref(false);
     const timerPaused = ref(false);
-    let startTimestamp = 0; // Para armazenar o início do tempo
-    let timer = null;
     const restCount = ref(0);
-    const totalTime = ref(0); // Total de tempo em segundos
+    const totalTime = ref(0);
     let totalTimer = null;
-    let wakeLock = null;
-
-    // Solicitar Wake Lock
-    const requestWakeLock = async () => {
-      try {
-        wakeLock = await navigator.wakeLock.request("screen");
-        console.log("Wake lock ativa");
-
-        wakeLock.addEventListener("release", () => {
-          console.log("Wake lock liberada automaticamente");
-        });
-      } catch (err) {
-        console.error(`${err.name}, ${err.message}`);
-      }
-    };
-
-    // Liberar Wake Lock
-    const releaseWakeLock = async () => {
-      if (wakeLock !== null) {
-        await wakeLock.release();
-        wakeLock = null;
-        console.log("Wake lock liberada manualmente");
-      }
-    };
 
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
@@ -111,18 +88,14 @@ export default {
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
-      return `${minutes < 10 ? "0" : ""}${minutes}:${
-        seconds < 10 ? "0" : ""
-      }${seconds}`;
+      return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
     const formattedTotalTime = computed(() => {
       const hours = Math.floor(totalTime.value / 3600);
       const minutes = Math.floor((totalTime.value % 3600) / 60);
       const seconds = totalTime.value % 60;
-      return `${hours < 10 ? "0" : ""}${hours}:${
-        minutes < 10 ? "0" : ""
-      }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
     const playPauseIcon = computed(() => {
@@ -141,11 +114,10 @@ export default {
 
       if (!timerRunning.value) {
         restCount.value++;
+
         timeRemaining.value = selectedTime.value.value;
         timerRunning.value = true;
         timerPaused.value = false;
-
-        requestWakeLock();
 
         if (!totalTimer) {
           totalTimer = setInterval(() => {
@@ -153,24 +125,8 @@ export default {
           }, 1000);
         }
 
-        startTimestamp = performance.now();
-
-        timer = setInterval(() => {
-          const elapsedTime = (performance.now() - startTimestamp) / 1000;
-          timeRemaining.value = Math.max(
-            selectedTime.value.value - Math.floor(elapsedTime),
-            0
-          );
-
-          if (timeRemaining.value === 0) {
-            stopTimer();
-            $q.notify({
-              message: "Tempo de descanso concluído!",
-              color: "primary",
-              position: "top",
-            });
-          }
-        }, 1000);
+        // Inicia o cronômetro no Web Worker
+        timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
 
@@ -185,49 +141,24 @@ export default {
     };
 
     const pauseTimer = () => {
-      clearInterval(timer);
+      // Pausa o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'pause' });
       timerPaused.value = true;
-      releaseWakeLock();
     };
 
     const resumeTimer = () => {
+      // Retoma o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'start', selectedTime: timeRemaining.value });
       timerRunning.value = true;
       timerPaused.value = false;
-      requestWakeLock();
-      startTimestamp = performance.now() - (selectedTime.value.value - timeRemaining.value) * 1000;
-
-      timer = setInterval(() => {
-        const elapsedTime = (performance.now() - startTimestamp) / 1000;
-        timeRemaining.value = Math.max(
-          selectedTime.value.value - Math.floor(elapsedTime),
-          0
-        );
-
-        if (timeRemaining.value === 0) {
-          stopTimer();
-          $q.notify({
-            message: "Tempo de descanso concluído!",
-            color: "primary",
-            position: "top",
-          });
-        }
-      }, 1000);
     };
 
     const resetTimer = () => {
-      clearInterval(timer);
+      // Reseta o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
       timerRunning.value = false;
       timerPaused.value = false;
-      timeRemaining.value = selectedTime.value ? selectedTime.value.value : 0;
       restCount.value = 0;
-      releaseWakeLock();
-    };
-
-    const stopTimer = () => {
-      clearInterval(timer);
-      timerRunning.value = false;
-      timerPaused.value = false;
-      releaseWakeLock();
     };
 
     const resetTotalTime = () => {
@@ -236,8 +167,21 @@ export default {
       totalTimer = null;
     };
 
+    // Recebe mensagens do Web Worker
+    timerWorker.onmessage = function (e) {
+      timeRemaining.value = e.data.timeRemaining;
+
+      if (timeRemaining.value <= 0) {
+        timerRunning.value = false;
+        $q.notify({
+          message: "Tempo de descanso concluído!",
+          color: "primary",
+          position: "top",
+        });
+      }
+    };
+
     onBeforeUnmount(() => {
-      stopTimer();
       clearInterval(totalTimer);
     });
 
@@ -258,6 +202,7 @@ export default {
     };
   },
 };
+
 </script>
 
 
