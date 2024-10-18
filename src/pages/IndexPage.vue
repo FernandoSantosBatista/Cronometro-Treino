@@ -70,28 +70,28 @@ export default {
     const timeRemaining = ref(0);
     const timerRunning = ref(false);
     const timerPaused = ref(false);
+    let startTimestamp = 0; // Para armazenar o início do tempo
     let timer = null;
     const restCount = ref(0);
-    const totalTime = ref(0); // Mantém o total de tempo em segundos
-    let totalTimer = null; // Intervalo para o total de tempo
-    let wakeLock = null; // Armazena a instância da Wake Lock
+    const totalTime = ref(0); // Total de tempo em segundos
+    let totalTimer = null;
+    let wakeLock = null;
 
-    // Função para solicitar a Wake Lock
+    // Solicitar Wake Lock
     const requestWakeLock = async () => {
       try {
-        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock = await navigator.wakeLock.request("screen");
         console.log("Wake lock ativa");
-        
-        // Evento disparado quando a Wake Lock é liberada automaticamente
-        wakeLock.addEventListener('release', () => {
-          console.log('Wake lock liberada automaticamente');
+
+        wakeLock.addEventListener("release", () => {
+          console.log("Wake lock liberada automaticamente");
         });
       } catch (err) {
         console.error(`${err.name}, ${err.message}`);
       }
     };
 
-    // Função para liberar a Wake Lock
+    // Liberar Wake Lock
     const releaseWakeLock = async () => {
       if (wakeLock !== null) {
         await wakeLock.release();
@@ -100,7 +100,6 @@ export default {
       }
     };
 
-    // Opções de tempo para o cronômetro
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
       { label: "2 Minutos", value: 120 },
@@ -109,7 +108,6 @@ export default {
       { label: "5 Minutos", value: 300 },
     ];
 
-    // Formatar o tempo restante do cronômetro principal
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
@@ -118,7 +116,6 @@ export default {
       }${seconds}`;
     });
 
-    // Formatar o total de tempo de treino
     const formattedTotalTime = computed(() => {
       const hours = Math.floor(totalTime.value / 3600);
       const minutes = Math.floor((totalTime.value % 3600) / 60);
@@ -128,12 +125,10 @@ export default {
       }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
-    // Ícone de pausa ou play, baseado no estado do cronômetro
     const playPauseIcon = computed(() => {
       return timerRunning.value && !timerPaused.value ? "pause" : "play_arrow";
     });
 
-    // Iniciar o cronômetro
     const startTimer = () => {
       if (!selectedTime.value) {
         $q.notify({
@@ -141,7 +136,7 @@ export default {
           color: "negative",
           position: "top",
         });
-        return; // Não iniciar o timer se o tempo não for selecionado
+        return;
       }
 
       if (!timerRunning.value) {
@@ -150,20 +145,24 @@ export default {
         timerRunning.value = true;
         timerPaused.value = false;
 
-        requestWakeLock(); // Solicitar Wake Lock ao iniciar o cronômetro
+        requestWakeLock();
 
-        // Iniciar o totalTimer se ainda não estiver rodando
         if (!totalTimer) {
           totalTimer = setInterval(() => {
-            totalTime.value++; // Incrementa o total de tempo a cada segundo
+            totalTime.value++;
           }, 1000);
         }
 
-        // Iniciar o cronômetro principal
+        startTimestamp = performance.now();
+
         timer = setInterval(() => {
-          if (timeRemaining.value > 0) {
-            timeRemaining.value--;
-          } else {
+          const elapsedTime = (performance.now() - startTimestamp) / 1000;
+          timeRemaining.value = Math.max(
+            selectedTime.value.value - Math.floor(elapsedTime),
+            0
+          );
+
+          if (timeRemaining.value === 0) {
             stopTimer();
             $q.notify({
               message: "Tempo de descanso concluído!",
@@ -175,7 +174,6 @@ export default {
       }
     };
 
-    // Alternar entre iniciar, pausar e retomar o cronômetro
     const togglePlayPause = () => {
       if (!timerRunning.value) {
         startTimer();
@@ -186,23 +184,26 @@ export default {
       }
     };
 
-    // Pausar o cronômetro
     const pauseTimer = () => {
       clearInterval(timer);
       timerPaused.value = true;
-      releaseWakeLock(); // Liberar Wake Lock ao pausar o cronômetro
+      releaseWakeLock();
     };
 
-    // Retomar o cronômetro
     const resumeTimer = () => {
       timerRunning.value = true;
       timerPaused.value = false;
-      requestWakeLock(); // Requisitar novamente ao retomar o cronômetro
+      requestWakeLock();
+      startTimestamp = performance.now() - (selectedTime.value.value - timeRemaining.value) * 1000;
 
       timer = setInterval(() => {
-        if (timeRemaining.value > 0) {
-          timeRemaining.value--;
-        } else {
+        const elapsedTime = (performance.now() - startTimestamp) / 1000;
+        timeRemaining.value = Math.max(
+          selectedTime.value.value - Math.floor(elapsedTime),
+          0
+        );
+
+        if (timeRemaining.value === 0) {
           stopTimer();
           $q.notify({
             message: "Tempo de descanso concluído!",
@@ -213,32 +214,28 @@ export default {
       }, 1000);
     };
 
-    // Resetar o cronômetro e o total de séries
     const resetTimer = () => {
       clearInterval(timer);
       timerRunning.value = false;
       timerPaused.value = false;
       timeRemaining.value = selectedTime.value ? selectedTime.value.value : 0;
       restCount.value = 0;
-      releaseWakeLock(); // Liberar Wake Lock ao resetar o cronômetro
+      releaseWakeLock();
     };
 
-    // Parar o cronômetro completamente
     const stopTimer = () => {
       clearInterval(timer);
       timerRunning.value = false;
       timerPaused.value = false;
-      releaseWakeLock(); // Liberar Wake Lock ao parar o cronômetro
+      releaseWakeLock();
     };
 
-    // Resetar o total de tempo de treino
     const resetTotalTime = () => {
       clearInterval(totalTimer);
       totalTime.value = 0;
       totalTimer = null;
     };
 
-    // Garantir que todos os timers sejam limpos ao desmontar o componente
     onBeforeUnmount(() => {
       stopTimer();
       clearInterval(totalTimer);
@@ -257,7 +254,7 @@ export default {
       resetTimer,
       startTimer,
       formattedTotalTime,
-      resetTotalTime, // Função para resetar o tempo total
+      resetTotalTime,
     };
   },
 };
