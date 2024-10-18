@@ -1,1 +1,24 @@
+let timeRemaining = 0;
+let interval = null;
 
+self.onmessage = function (e) {
+  const { command, selectedTime } = e.data;
+  
+  if (command === 'start') {
+    timeRemaining = selectedTime;
+    interval = setInterval(() => {
+      timeRemaining -= 1;
+      if (timeRemaining <= 0) {
+        clearInterval(interval);
+      }
+      // Envia a atualização do cronômetro de volta ao thread principal
+      postMessage({ timeRemaining });
+    }, 1000);
+  } else if (command === 'pause') {
+    clearInterval(interval);
+  } else if (command === 'reset') {
+    clearInterval(interval);
+    timeRemaining = selectedTime;
+    postMessage({ timeRemaining });
+  }
+};
