@@ -4,6 +4,7 @@ let endTime;
 let pausedTime;
 let timeRemaining;
 let totalTime = 0;  // Variável para armazenar o tempo total
+let totalStartTime;  // Para controlar o início do Total Timer
 
 onmessage = function (e) {
   const { command, selectedTime } = e.data;
@@ -12,7 +13,6 @@ onmessage = function (e) {
   if (command === 'start') {
     if (countdownTimer) clearInterval(countdownTimer);
 
-    // Se o tempo estava pausado, retoma a partir de onde parou
     if (pausedTime) {
       endTime = Date.now() + pausedTime * 1000;
     } else {
@@ -30,7 +30,7 @@ onmessage = function (e) {
       } else {
         postMessage({ timeRemaining });
       }
-    }, 100);  // Atualize a cada 100ms para maior precisão
+    }, 100);  // Atualiza a cada 100ms para maior precisão
   }
 
   // Pausar cronômetro
@@ -49,10 +49,11 @@ onmessage = function (e) {
 
   // Total Timer
   if (command === 'startTotal') {
-    if (totalTimer) clearInterval(totalTimer);
-
+    totalStartTime = Date.now();  // Registra o tempo em que o Total Timer começou
+    totalTime = 0;  // Reseta o tempo total antes de começar
     totalTimer = setInterval(() => {
-      totalTime++;
+      const now = Date.now();
+      totalTime = Math.floor((now - totalStartTime) / 1000);  // Calcula o tempo total em segundos
       postMessage({ totalTime });  // Envia o tempo total atualizado
     }, 1000);  // Atualiza a cada 1 segundo
   }
