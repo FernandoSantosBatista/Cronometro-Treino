@@ -54,8 +54,7 @@ onmessage = function (e) {
     totalTimerRunning = true; // Marca que o total timer está rodando
     totalTimer = setInterval(() => {
       const now = Date.now();
-      totalTime = Math.floor((now - totalStartTime) / 1000) + totalTime;  // Atualiza o tempo total acumulado
-      totalStartTime = now;  // Atualiza o ponto de referência do tempo
+      totalTime = Math.floor((now - totalStartTime) / 1000);  // Calcula o tempo total desde que o total timer começou
       postMessage({ totalTime });  // Envia o tempo total atualizado
     }, 1000);  // Atualiza a cada 1 segundo
   }
@@ -68,3 +67,4 @@ onmessage = function (e) {
     postMessage({ totalTime: 0 });  // Envia o tempo total resetado
   }
 };
+
