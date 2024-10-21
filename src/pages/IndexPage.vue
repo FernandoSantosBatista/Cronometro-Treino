@@ -143,12 +143,15 @@ export default {
     };
 
     const resetTimer = () => {
-      // Reseta apenas o cronômetro principal, sem tocar no totalTime
-      timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
-      timerRunning.value = false;
-      timerPaused.value = false;
-      timeRemaining.value = 0; // Reseta o tempo restante
-   };
+  // Reseta apenas o cronômetro principal, sem tocar no totalTime
+       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
+       timerRunning.value = false;
+       timerPaused.value = false;
+       timeRemaining.value = 0; // Reseta o tempo restante
+
+  // Reseta o contador de séries concluídas
+     restCount.value = 0;
+  };
 
     const resetTotalTime = () => {
       timerWorker.postMessage({ command: 'resetTotal' });
