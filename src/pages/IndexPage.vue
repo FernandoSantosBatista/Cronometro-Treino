@@ -202,3 +202,100 @@ export default {
   },
 };
 </script>
+
+
+<style>
+/* Seção do topo (total-time-container) */
+.total-time-container {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  padding: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.total-time-reset-btn {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.formatted-total-time {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  margin-right: 8px;
+}
+
+/* Seção central (central-container) */
+.central-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
+  background-color: #333;
+  border-radius: 10px;
+}
+
+.time-selector {
+  margin-bottom: 20px;
+  width: 80%;
+}
+
+.timer-row {
+  font-size: 80px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+#rest-count {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Seção do rodapé (button-container) */
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 20px;
+  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
+}
+
+.timer-button {
+  width: 70px;
+  height: 70px;
+}
+
+/* Estilo adicional */
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
+}
+
+.q-select__dialog {
+  color: white;
+  background-color: #1c1c1c;
+}
+
+.q-field__label {
+  color: white;
+}
+
+.q-field__control {
+  color: white;
+}
+
+body {
+  background-color: #1c1c1c;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+</style>
