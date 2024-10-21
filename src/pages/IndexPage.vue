@@ -102,28 +102,29 @@ export default {
     });
 
     const startTimer = () => {
-      if (!selectedTime.value) {
-        $q.notify({
-          message: "Selecione o tempo!",
-          color: "negative",
-          position: "top",
-        });
-        return;
-      }
+  if (!selectedTime.value) {
+    $q.notify({
+      message: "Selecione o tempo!",
+      color: "negative",
+      position: "top",
+    });
+    return;
+  }
 
-      if (!timerRunning.value) {
-        restCount.value++;
-        timeRemaining.value = selectedTime.value.value;
-        timerRunning.value = true;
-        timerPaused.value = false;
+  if (!timerRunning.value) {
+    restCount.value++;
+    timeRemaining.value = selectedTime.value.value;
+    timerRunning.value = true;
+    timerPaused.value = false;
 
-        // Inicia o cronômetro no Web Worker
-        timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
+    // Inicia o cronômetro no Web Worker
+    timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
 
-        // Inicia o Total Timer se não estiver rodando
-        timerWorker.postMessage({ command: 'startTotal' });
-      }
-    };
+    // Inicia o Total Timer se não estiver rodando
+    timerWorker.postMessage({ command: 'startTotal' });
+  }
+};
+    
 
     const togglePlayPause = () => {
       if (!timerRunning.value) {
