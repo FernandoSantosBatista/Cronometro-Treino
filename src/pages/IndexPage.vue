@@ -75,7 +75,6 @@ export default {
     const timerPaused = ref(false);
     const restCount = ref(0);
     const totalTime = ref(0);
-    let totalStartTime = null;
     let totalTimer = null;
 
     const timeOptions = [
@@ -86,27 +85,16 @@ export default {
       { label: "5 Minutos", value: 300 },
     ];
 
-    // Formatação do cronômetro principal
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
       return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
-    // Formatação do tempo total de treino
     const formattedTotalTime = computed(() => {
-      if (!totalStartTime) {
-        return "00:00:00"; // Retorna zero quando ainda não iniciou
-      }
-
-      const elapsedTime = totalTimer
-        ? Math.floor((Date.now() - totalStartTime) / 1000) + totalTime.value
-        : totalTime.value;
-
-      const hours = Math.floor(elapsedTime / 3600);
-      const minutes = Math.floor((elapsedTime % 3600) / 60);
-      const seconds = elapsedTime % 60;
-
+      const hours = Math.floor(totalTime.value / 3600);
+      const minutes = Math.floor((totalTime.value % 3600) / 60);
+      const seconds = totalTime.value % 60;
       return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
@@ -131,9 +119,8 @@ export default {
         timerPaused.value = false;
 
         if (!totalTimer) {
-          totalStartTime = Date.now();  // Registra o início do tempo total
           totalTimer = setInterval(() => {
-            // Intervalo para o cálculo contínuo do tempo total
+            totalTime.value++;
           }, 1000);
         }
 
@@ -176,7 +163,6 @@ export default {
     const resetTotalTime = () => {
       clearInterval(totalTimer);
       totalTime.value = 0;
-      totalStartTime = null;
       totalTimer = null;
     };
 
@@ -216,100 +202,3 @@ export default {
   },
 };
 </script>
-
-
-<style>
-/* Seção do topo (total-time-container) */
-.total-time-container {
-  width: 100%;
-  display: flex;
-  justify-content: right;
-  padding: 10px;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-}
-
-.total-time-reset-btn {
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
-}
-
-.formatted-total-time {
-  font-size: 28px;
-  font-weight: bold;
-  color: white;
-  margin-right: 8px;
-}
-
-/* Seção central (central-container) */
-.central-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
-  background-color: #333;
-  border-radius: 10px;
-}
-
-.time-selector {
-  margin-bottom: 20px;
-  width: 80%;
-}
-
-.timer-row {
-  font-size: 80px;
-  color: white;
-  margin-bottom: 20px;
-}
-
-#rest-count {
-  font-size: 20px;
-  color: white;
-  margin-bottom: 20px;
-}
-
-/* Seção do rodapé (button-container) */
-.button-container {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  padding: 20px;
-  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
-}
-
-.timer-button {
-  width: 70px;
-  height: 70px;
-}
-
-/* Estilo adicional */
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
-  color: white;
-}
-
-.q-select__dialog {
-  color: white;
-  background-color: #1c1c1c;
-}
-
-.q-field__label {
-  color: white;
-}
-
-.q-field__control {
-  color: white;
-}
-
-body {
-  background-color: #1c1c1c;
-  color: white;
-  font-family: "Poppins", sans-serif;
-}
-</style>
