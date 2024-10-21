@@ -20,7 +20,7 @@
       <q-select
         v-model="selectedTime"
         :options="timeOptions"
-        label="Selecione o tempo"
+        label="Selecione o tempo de descanso"
         outlined
         dense
         class="time-selector"
@@ -104,7 +104,7 @@ export default {
     const startTimer = () => {
   if (!selectedTime.value) {
     $q.notify({
-      message: "Selecione o tempo!",
+      message: "Selecione o tempo de descanso !",
       color: "negative",
       position: "top",
     });
