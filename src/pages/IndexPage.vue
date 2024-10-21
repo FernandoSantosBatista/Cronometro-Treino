@@ -75,7 +75,6 @@ export default {
     const timerPaused = ref(false);
     const restCount = ref(0);
     const totalTime = ref(0);
-    let totalTimer = null;
 
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
@@ -118,14 +117,11 @@ export default {
         timerRunning.value = true;
         timerPaused.value = false;
 
-        if (!totalTimer) {
-          totalTimer = setInterval(() => {
-            totalTime.value++;
-          }, 1000);
-        }
-
         // Inicia o cronômetro no Web Worker
         timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
+
+        // Inicia o Total Timer se não estiver rodando
+        timerWorker.postMessage({ command: 'startTotal' });
       }
     };
 
@@ -153,7 +149,6 @@ export default {
     };
 
     const resetTimer = () => {
-      // Reseta o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
       timerRunning.value = false;
       timerPaused.value = false;
@@ -161,27 +156,31 @@ export default {
     };
 
     const resetTotalTime = () => {
-      clearInterval(totalTimer);
-      totalTime.value = 0;
-      totalTimer = null;
+      timerWorker.postMessage({ command: 'resetTotal' });
     };
 
     // Recebe mensagens do Web Worker
     timerWorker.onmessage = function (e) {
-      timeRemaining.value = e.data.timeRemaining;
+      if (e.data.timeRemaining !== undefined) {
+        timeRemaining.value = e.data.timeRemaining;
 
-      if (timeRemaining.value <= 0) {
-        timerRunning.value = false;
-        $q.notify({
-          message: "Tempo de descanso concluído!",
-          color: "primary",
-          position: "top",
-        });
+        if (timeRemaining.value <= 0) {
+          timerRunning.value = false;
+          $q.notify({
+            message: "Tempo de descanso concluído!",
+            color: "primary",
+            position: "top",
+          });
+        }
+      }
+
+      if (e.data.totalTime !== undefined) {
+        totalTime.value = e.data.totalTime;
       }
     };
 
     onBeforeUnmount(() => {
-      clearInterval(totalTimer);
+      timerWorker.postMessage({ command: 'resetTotal' });
     });
 
     return {
@@ -202,8 +201,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style>
 /* Seção do topo (total-time-container) */
