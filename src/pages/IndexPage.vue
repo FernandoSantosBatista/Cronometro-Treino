@@ -95,6 +95,10 @@ export default {
 
     // Formatação do tempo total de treino
     const formattedTotalTime = computed(() => {
+      if (!totalStartTime) {
+        return "00:00:00"; // Retorna zero quando ainda não iniciou
+      }
+
       const elapsedTime = totalTimer
         ? Math.floor((Date.now() - totalStartTime) / 1000) + totalTime.value
         : totalTime.value;
@@ -129,7 +133,7 @@ export default {
         if (!totalTimer) {
           totalStartTime = Date.now();  // Registra o início do tempo total
           totalTimer = setInterval(() => {
-            // A lógica do tempo total está agora baseada no tempo decorrido usando `Date`
+            // Intervalo para o cálculo contínuo do tempo total
           }, 1000);
         }
 
@@ -212,8 +216,6 @@ export default {
   },
 };
 </script>
-
-
 
 
 <style>
