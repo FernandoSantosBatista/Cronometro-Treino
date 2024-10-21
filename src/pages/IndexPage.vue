@@ -74,7 +74,7 @@ export default {
     const timerRunning = ref(false);
     const timerPaused = ref(false);
     const restCount = ref(0);
-    const totalTime = ref(0);
+    const totalTime = ref(0);  // Tempo total de treino
     let totalTimer = null;
 
     const timeOptions = [
@@ -85,12 +85,14 @@ export default {
       { label: "5 Minutos", value: 300 },
     ];
 
+    // Formatação do tempo restante do cronômetro principal
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
       return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
+    // Formatação do tempo total de treino
     const formattedTotalTime = computed(() => {
       const hours = Math.floor(totalTime.value / 3600);
       const minutes = Math.floor((totalTime.value % 3600) / 60);
@@ -98,10 +100,12 @@ export default {
       return `${hours < 10 ? "0" : ""}${hours}:${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     });
 
+    // Define o ícone para o botão de play/pause
     const playPauseIcon = computed(() => {
       return timerRunning.value && !timerPaused.value ? "pause" : "play_arrow";
     });
 
+    // Função para iniciar o cronômetro
     const startTimer = () => {
       if (!selectedTime.value) {
         $q.notify({
@@ -114,21 +118,17 @@ export default {
 
       if (!timerRunning.value) {
         restCount.value++;
+
         timeRemaining.value = selectedTime.value.value;
         timerRunning.value = true;
         timerPaused.value = false;
-
-        if (!totalTimer) {
-          totalTimer = setInterval(() => {
-            totalTime.value++;
-          }, 1000);
-        }
 
         // Inicia o cronômetro no Web Worker
         timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
 
+    // Alterna entre play e pause
     const togglePlayPause = () => {
       if (!timerRunning.value) {
         startTimer();
@@ -139,12 +139,14 @@ export default {
       }
     };
 
+    // Pausar o cronômetro
     const pauseTimer = () => {
       // Pausa o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'pause' });
       timerPaused.value = true;
     };
 
+    // Retomar o cronômetro
     const resumeTimer = () => {
       // Retoma o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'start', selectedTime: timeRemaining.value });
@@ -152,6 +154,7 @@ export default {
       timerPaused.value = false;
     };
 
+    // Resetar o cronômetro
     const resetTimer = () => {
       // Reseta o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
@@ -160,23 +163,33 @@ export default {
       restCount.value = 0;
     };
 
+    // Resetar o tempo total
     const resetTotalTime = () => {
-      clearInterval(totalTimer);
       totalTime.value = 0;
       totalTimer = null;
     };
 
-    // Recebe mensagens do Web Worker
+    // Recebe as mensagens do Web Worker
     timerWorker.onmessage = function (e) {
-      timeRemaining.value = e.data.timeRemaining;
+      const { timeRemaining: newTimeRemaining, totalTimeElapsed } = e.data;
 
-      if (timeRemaining.value <= 0) {
-        timerRunning.value = false;
-        $q.notify({
-          message: "Tempo de descanso concluído!",
-          color: "primary",
-          position: "top",
-        });
+      // Atualiza o tempo restante do cronômetro principal
+      if (newTimeRemaining !== undefined) {
+        timeRemaining.value = newTimeRemaining;
+
+        if (timeRemaining.value <= 0) {
+          timerRunning.value = false;
+          $q.notify({
+            message: "Tempo de descanso concluído!",
+            color: "primary",
+            position: "top",
+          });
+        }
+      }
+
+      // Atualiza o tempo total de treino
+      if (totalTimeElapsed !== undefined) {
+        totalTime.value = totalTimeElapsed;
       }
     };
 
@@ -202,6 +215,7 @@ export default {
   },
 };
 </script>
+
 
 
 <style>
