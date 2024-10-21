@@ -150,13 +150,6 @@ export default {
       timeRemaining.value = 0; // Reseta o tempo restante
    };
 
-    const resetTimer = () => {
-      timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
-      timerRunning.value = false;
-      timerPaused.value = false;
-      restCount.value = 0;
-    };
-
     const resetTotalTime = () => {
       timerWorker.postMessage({ command: 'resetTotal' });
     };
