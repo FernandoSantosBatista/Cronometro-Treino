@@ -1,23 +1,32 @@
-let timeRemaining = 0;
-let interval = null;
+let countdownTimer;
+let timeRemaining;
 
-self.onmessage = function (e) {
+onmessage = function (e) {
   const { command, selectedTime } = e.data;
 
   if (command === 'start') {
+    if (countdownTimer) clearInterval(countdownTimer);
+
     timeRemaining = selectedTime;
-    interval = setInterval(() => {
+    
+    countdownTimer = setInterval(() => {
       timeRemaining--;
-      if (timeRemaining <= 0) {
-        clearInterval(interval);
-      }
       postMessage({ timeRemaining });
+
+      if (timeRemaining <= 0) {
+        clearInterval(countdownTimer);
+        postMessage({ timeRemaining: 0 });
+      }
     }, 1000);
-  } else if (command === 'pause') {
-    clearInterval(interval);
-  } else if (command === 'reset') {
-    clearInterval(interval);
+  }
+
+  if (command === 'pause') {
+    clearInterval(countdownTimer);
+  }
+
+  if (command === 'reset') {
+    clearInterval(countdownTimer);
     timeRemaining = selectedTime;
-    postMessage({ timeRemaining });
+    postMessage({ timeRemaining: selectedTime });
   }
 };
