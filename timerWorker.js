@@ -5,6 +5,7 @@ let pausedTime;
 let timeRemaining;
 let totalTime = 0;  // Variável para armazenar o tempo total
 let totalStartTime;  // Para controlar o início do Total Timer
+let totalTimerRunning = false; // Flag para verificar se o total timer já está rodando
 
 onmessage = function (e) {
   const { command, selectedTime } = e.data;
@@ -48,12 +49,13 @@ onmessage = function (e) {
   }
 
   // Total Timer
-  if (command === 'startTotal') {
+  if (command === 'startTotal' && !totalTimerRunning) {  // Verifica se já está rodando
     totalStartTime = Date.now();  // Registra o tempo em que o Total Timer começou
-    totalTime = 0;  // Reseta o tempo total antes de começar
+    totalTimerRunning = true; // Marca que o total timer está rodando
     totalTimer = setInterval(() => {
       const now = Date.now();
-      totalTime = Math.floor((now - totalStartTime) / 1000);  // Calcula o tempo total em segundos
+      totalTime = Math.floor((now - totalStartTime) / 1000) + totalTime;  // Atualiza o tempo total acumulado
+      totalStartTime = now;  // Atualiza o ponto de referência do tempo
       postMessage({ totalTime });  // Envia o tempo total atualizado
     }, 1000);  // Atualiza a cada 1 segundo
   }
@@ -62,6 +64,7 @@ onmessage = function (e) {
   if (command === 'resetTotal') {
     clearInterval(totalTimer);
     totalTime = 0;
+    totalTimerRunning = false; // Reseta o status do total timer
     postMessage({ totalTime: 0 });  // Envia o tempo total resetado
   }
 };
