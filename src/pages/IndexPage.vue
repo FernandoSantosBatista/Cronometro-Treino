@@ -142,12 +142,13 @@ export default {
       timerPaused.value = true;
     };
 
-    const resumeTimer = () => {
-      // Retoma o cronômetro no Web Worker
-      timerWorker.postMessage({ command: 'start', selectedTime: timeRemaining.value });
-      timerRunning.value = true;
+    const resetTimer = () => {
+      // Reseta apenas o cronômetro principal, sem tocar no totalTime
+      timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
+      timerRunning.value = false;
       timerPaused.value = false;
-    };
+      timeRemaining.value = 0; // Reseta o tempo restante
+   };
 
     const resetTimer = () => {
       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
