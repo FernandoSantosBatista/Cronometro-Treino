@@ -148,6 +148,13 @@ export default {
       }
     };
 
+    const resumeTimer = () => {
+  // Retoma o cronômetro no Web Worker
+      timerWorker.postMessage({ command: 'resume' });
+      timerPaused.value = false;
+      timerRunning.value = true;
+   };
+
     const pauseTimer = () => {
       // Pausa o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'pause' });
