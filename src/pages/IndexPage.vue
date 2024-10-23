@@ -2,7 +2,9 @@
   <q-page class="q-pa-md flex flex-column justify-between">
     <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
-
+      
+<!-- Texto "Tempo Total" acima do cronômetro -->
+      <div class="total-time-label">Tempo Total</div>
       <q-btn
     v-if="showResetTotal"
     flat
@@ -240,6 +242,15 @@ export default {
   margin-bottom: 12px;
   display: flex;
   align-items: center;
+}
+
+.total-time-label {
+  font-size: 16px;
+  color: white;
+  margin-right: 8px;
+  margin-bottom: 4px;
+  font-weight: bold;
+  text-align: right;
 }
 
 .total-time-reset-btn {
