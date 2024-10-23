@@ -114,7 +114,7 @@ export default {
     const startTimer = () => {
   if (!selectedTime.value) {
     $q.notify({
-      message: "Selecione o tempo de descanso !",
+      message: "Selecione o tempo de descanso!",
       color: "negative",
       position: "top",
     });
@@ -127,15 +127,14 @@ export default {
     timerRunning.value = true;
     timerPaused.value = false;
 
-    // Inicia o cronômetro no Web Worker
+    // Inicia o cronômetro de descanso no Web Worker
     timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
 
-    // Inicia o Total Timer se não estiver rodando
-    timerWorker.postMessage({ command: 'startTotal' });
+    // Removido o início automático do Total Timer
+    // timerWorker.postMessage({ command: 'startTotal' });
   }
 };
-    
-
+   
     const togglePlayPause = () => {
       if (!timerRunning.value) {
         startTimer();
@@ -163,10 +162,9 @@ export default {
      restCount.value = 0;
   };
 
-    const startTotalTimer = () => {
+   const startTotalTimer = () => {
      timerWorker.postMessage({ command: 'startTotal' });
   };
-
 
     const resetTotalTime = () => {
      timerWorker.postMessage({ command: 'resetTotal' });
