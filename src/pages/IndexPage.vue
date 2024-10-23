@@ -32,9 +32,8 @@
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
-      <!-- Contador de séries -->
-      <div id="rest-count">Séries concluídas: {{ restCount }}</div>
-    </div>
+    <!-- Contador de séries -->
+    <div id="rest-count">Séries concluídas: {{ restCount }}</div> <!-- Fechamento da div corrigido -->
 
     <!-- Seção do rodapé com botões de controle -->
     <div class="button-container">
