@@ -32,24 +32,6 @@
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
-
-    <!-- Seção central com seletor de tempo, cronômetro e contador de séries -->
-    <div class="central-container">
-      <!-- Seletor de tempo -->
-      <q-select
-        v-model="selectedTime"
-        :options="timeOptions"
-        label="Selecione o tempo de descanso"
-        outlined
-        dense
-        class="time-selector"
-      />
-
-      <!-- Cronômetro principal (00:00) -->
-      <div class="timer-row">
-        <span id="timer">{{ formattedTime }}</span>
-      </div>
-
       <!-- Contador de séries -->
       <div id="rest-count">Séries concluídas: {{ restCount }}</div>
     </div>
