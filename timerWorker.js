@@ -49,15 +49,16 @@ onmessage = function (e) {
   }
 
   // Total Timer
-  if (command === 'startTotal' && !totalTimerRunning) {  // Verifica se já está rodando
-    totalStartTime = Date.now();  // Registra o tempo em que o Total Timer começou
-    totalTimerRunning = true; // Marca que o total timer está rodando
-    totalTimer = setInterval(() => {
-      const now = Date.now();
-      totalTime = Math.floor((now - totalStartTime) / 1000);  // Calcula o tempo total desde que o total timer começou
-      postMessage({ totalTime });  // Envia o tempo total atualizado
-    }, 1000);  // Atualiza a cada 1 segundo
-  }
+if (command === 'startTotal' && !totalTimerRunning) {  // Verifica se já está rodando
+  totalStartTime = Date.now();  // Registra o tempo em que o Total Timer começou
+  totalTimerRunning = true;  // Marca que o total timer está rodando
+  totalTimer = setInterval(() => {
+    const now = Date.now();
+    totalTime = Math.floor((now - totalStartTime) / 1000) + totalTime;  // Atualiza o tempo total acumulado
+    totalStartTime = now;  // Atualiza o ponto de referência do tempo
+    postMessage({ totalTime });  // Envia o tempo total atualizado
+  }, 1000);  // Atualiza a cada 1 segundo
+}
 
   // Resetar Total Timer
   if (command === 'resetTotal') {
