@@ -3,37 +3,54 @@
     <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
       
-      <!-- Texto "Tempo Total" acima do cronômetro -->
+<!-- Texto "Tempo Total" acima do cronômetro -->
       <div class="total-time-label">Tempo Total</div>
-
       <q-btn
-        v-if="showResetTotal"
-        flat
-        round
-        dense
-        icon="pause"
-        @click="resetTotalTime"
-        size="20px"
-        class="total-time-reset-btn"
-      />
-      
-      <!-- Botão Start do Total Timer -->
-      <q-btn
-        v-if="!showResetTotal"
-        flat
-        round
-        dense
-        icon="play_arrow"
-        @click="startTotalTimer"
-        size="20px"
-        class="total-time-start-btn"
-      />
+    v-if="showResetTotal"
+    flat
+    round
+    dense
+    icon="pause"
+    @click="resetTotalTime"
+    size="20px"
+    class="total-time-reset-btn"
+  />
+  
+  <!-- Botão Start do Total Timer -->
+  <q-btn
+    v-if="!showResetTotal"
+    flat
+    round
+    dense
+    icon="play_arrow"
+    @click="startTotalTimer"
+    size="20px"
+    class="total-time-start-btn"
+  />
 
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
-    <!-- Contador de séries -->
-    <div id="rest-count">Séries concluídas: {{ restCount }}</div> <!-- Fechamento da div corrigido -->
+    <!-- Seção central com seletor de tempo, cronômetro e contador de séries -->
+    <div class="central-container">
+      <!-- Seletor de tempo -->
+      <q-select
+        v-model="selectedTime"
+        :options="timeOptions"
+        label="Selecione o tempo de descanso"
+        outlined
+        dense
+        class="time-selector"
+      />
+
+      <!-- Cronômetro principal (00:00) -->
+      <div class="timer-row">
+        <span id="timer">{{ formattedTime }}</span>
+      </div>
+
+      <!-- Contador de séries -->
+      <div id="rest-count">Séries concluídas: {{ restCount }}</div>
+    </div>
 
     <!-- Seção do rodapé com botões de controle -->
     <div class="button-container">
