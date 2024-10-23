@@ -2,25 +2,30 @@
   <q-page class="q-pa-md flex flex-column justify-between">
     <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
+
       <q-btn
-        flat
-        round
-        dense
-        icon="pause"
-        @click="resetTotalTime"
-        size="20px"
-        class="total-time-reset-btn"
-      />
-      <!-- Botão de início do Total Timer -->
-      <q-btn
-        flat
-        round
-        dense
-        icon="play_arrow"
-        @click="startTotalTimer"
-        size="20px"
-        class="total-time-start-btn"
-      />
+    v-if="showResetTotal"
+    flat
+    round
+    dense
+    icon="pause"
+    @click="resetTotalTime"
+    size="20px"
+    class="total-time-reset-btn"
+  />
+  
+  <!-- Botão Start do Total Timer -->
+  <q-btn
+    v-if="!showResetTotal"
+    flat
+    round
+    dense
+    icon="play_arrow"
+    @click="startTotalTimer"
+    size="20px"
+    class="total-time-start-btn"
+  />
+
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
@@ -70,7 +75,7 @@
 </template>
 
 <script>
-import { ref, computed, onBeforeUnmount } from "vue";
+  import { ref, computed, onBeforeUnmount } from "vue";
 import { useQuasar } from "quasar";
 
 // Importa o Web Worker
@@ -86,6 +91,7 @@ export default {
     const restCount = ref(0);
     const totalTime = ref(0);
 
+    const showResetTotal = ref(false);  // Controle para o botão Reset
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
       { label: "2 Minutos", value: 120 },
@@ -112,28 +118,25 @@ export default {
     });
 
     const startTimer = () => {
-  if (!selectedTime.value) {
-    $q.notify({
-      message: "Selecione o tempo de descanso!",
-      color: "negative",
-      position: "top",
-    });
-    return;
-  }
+      if (!selectedTime.value) {
+        $q.notify({
+          message: "Selecione o tempo de descanso!",
+          color: "negative",
+          position: "top",
+        });
+        return;
+      }
 
-  if (!timerRunning.value) {
-    restCount.value++;
-    timeRemaining.value = selectedTime.value.value;
-    timerRunning.value = true;
-    timerPaused.value = false;
+      if (!timerRunning.value) {
+        restCount.value++;
+        timeRemaining.value = selectedTime.value.value;
+        timerRunning.value = true;
+        timerPaused.value = false;
 
-    // Inicia o cronômetro de descanso no Web Worker
-    timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
-
-    // Removido o início automático do Total Timer
-    // timerWorker.postMessage({ command: 'startTotal' });
-  }
-};
+        // Inicia o cronômetro de descanso no Web Worker
+        timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
+      }
+    };
    
     const togglePlayPause = () => {
       if (!timerRunning.value) {
@@ -152,24 +155,27 @@ export default {
     };
 
     const resetTimer = () => {
-  // Reseta apenas o cronômetro principal, sem tocar no totalTime
-       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
-       timerRunning.value = false;
-       timerPaused.value = false;
-       timeRemaining.value = 0; // Reseta o tempo restante
+      // Reseta apenas o cronômetro principal, sem tocar no totalTime
+      timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
+      timerRunning.value = false;
+      timerPaused.value = false;
+      timeRemaining.value = 0; // Reseta o tempo restante
 
-  // Reseta o contador de séries concluídas
-     restCount.value = 0;
-  };
+      // Reseta o contador de séries concluídas
+      restCount.value = 0;
+    };
 
-   const startTotalTimer = () => {
-     timerWorker.postMessage({ command: 'startTotal' });
-  };
+    // Função para iniciar o Total Timer e alternar os botões
+    const startTotalTimer = () => {
+      timerWorker.postMessage({ command: 'startTotal' });
+      showResetTotal.value = true;  // Mostra o botão Reset e oculta o Start
+    };
 
+    // Função para resetar o Total Timer e alternar os botões
     const resetTotalTime = () => {
-     timerWorker.postMessage({ command: 'resetTotal' });
-  };
-
+      timerWorker.postMessage({ command: 'resetTotal' });
+      showResetTotal.value = false;  // Mostra o botão Start e oculta o Reset
+    };
 
     // Recebe mensagens do Web Worker
     timerWorker.onmessage = function (e) {
@@ -210,9 +216,11 @@ export default {
       formattedTotalTime,
       resetTotalTime,
       startTotalTimer,
+      showResetTotal,  // Retorna a flag para controle de visibilidade
     };
   },
 };
+  
 </script>
 
 <style>
