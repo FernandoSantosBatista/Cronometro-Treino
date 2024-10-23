@@ -11,6 +11,16 @@
         size="20px"
         class="total-time-reset-btn"
       />
+      <!-- Botão de início do Total Timer -->
+      <q-btn
+        flat
+        round
+        dense
+        icon="play_arrow"
+        @click="startTotalTimer"
+        size="20px"
+        class="total-time-start-btn"
+      />
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
@@ -153,9 +163,15 @@ export default {
      restCount.value = 0;
   };
 
+    const startTotalTimer = () => {
+     timerWorker.postMessage({ command: 'startTotal' });
+  };
+
+
     const resetTotalTime = () => {
-      timerWorker.postMessage({ command: 'resetTotal' });
-    };
+     timerWorker.postMessage({ command: 'resetTotal' });
+  };
+
 
     // Recebe mensagens do Web Worker
     timerWorker.onmessage = function (e) {
@@ -195,6 +211,7 @@ export default {
       startTimer,
       formattedTotalTime,
       resetTotalTime,
+      startTotalTimer,
     };
   },
 };
