@@ -40,6 +40,25 @@ onmessage = function (e) {
     pausedTime = timeRemaining;  // Salva o tempo restante ao pausar
   }
 
+  // Retomar cronômetro
+  if (command === 'resume') {
+    if (pausedTime) {
+      endTime = Date.now() + pausedTime * 1000;  // Define o novo endTime ao retomar
+      countdownTimer = setInterval(() => {
+        const now = Date.now();
+        timeRemaining = Math.round((endTime - now) / 1000);
+
+        if (timeRemaining <= 0) {
+          clearInterval(countdownTimer);
+          postMessage({ timeRemaining: 0 });
+        } else {
+          postMessage({ timeRemaining });
+        }
+      }, 100);
+      pausedTime = null;  // Limpa o tempo pausado após retomar
+    }
+  }
+
   // Resetar cronômetro
   if (command === 'reset') {
     clearInterval(countdownTimer);
