@@ -85,6 +85,7 @@
         class="timer-button"
       />
     </div>
+    <p> {{ getSavedTimes }} </p>
   </q-page>
 </template>
 
@@ -153,12 +154,27 @@ export default {
     };
 
     const saveTotalTime = () => {
-      localStorage.setItem('totalTime', totalTime.value);
+  // Recupera o array de tempos salvos do localStorage, ou inicializa um novo array se não houver
+  let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
+
+  // Adiciona o tempo atual ao array
+  savedTimes.push(totalTime.value);
+
+  // Armazena o array atualizado no localStorage
+  localStorage.setItem('savedTimes', JSON.stringify(savedTimes));
+
+  // Exibe uma notificação de sucesso
   $q.notify({
-       message: "Tempo total salvo com sucesso!",
-       color: "positive",
-       position: "top",
+    message: "Tempo total salvo com sucesso!",
+    color: "positive",
+    position: "top",
   });
+};
+
+    const getSavedTimes = () => {
+  let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
+  console.log(savedTimes); // Exibe os tempos no console
+  return savedTimes;
 };
    
     const togglePlayPause = () => {
