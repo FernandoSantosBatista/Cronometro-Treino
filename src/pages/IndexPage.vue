@@ -1,10 +1,12 @@
 <template>
-  <q-page class="q-pa-md flex flex-column justify-between">
+  <q-page class="q-pa-md flex flex-column justify-between" style="background-color: #1c1c1c;">
     <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
-      
       <!-- Texto "Tempo Total" acima do cronômetro -->
       <div class="total-time-label">Tempo Total</div>
+
+      <!-- Exibição do Tempo Total -->
+      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
 
       <!-- Botão Salvar Total Timer -->
       <q-btn
@@ -16,9 +18,6 @@
         size="20px"
         class="total-time-save-btn"
       />
-
-      <!-- Exibição do Tempo Total -->
-      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
     <!-- Seção central com seletor de tempo, cronômetro e contador de séries -->
@@ -93,7 +92,6 @@ export default {
       { label: "5 Minutos", value: 300 },
     ];
 
-    // Computed para formatar o tempo restante e o tempo total
     const formattedTime = computed(() => {
       const minutes = Math.floor(timeRemaining.value / 60);
       const seconds = timeRemaining.value % 60;
@@ -127,7 +125,6 @@ export default {
         timerRunning.value = true;
         timerPaused.value = false;
 
-        // Inicia o cronômetro de descanso no Web Worker
         timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
@@ -143,30 +140,25 @@ export default {
     };
 
     const resumeTimer = () => {
-      // Retoma o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'resume' });
       timerPaused.value = false;
       timerRunning.value = true;
     };
 
     const pauseTimer = () => {
-      // Pausa o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'pause' });
       timerPaused.value = true;
     };
 
     const resetTimer = () => {
-      // Reseta apenas o cronômetro principal, sem tocar no totalTime
       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
       timerRunning.value = false;
       timerPaused.value = false;
-      timeRemaining.value = 0; // Reseta o tempo restante
+      timeRemaining.value = 0;
 
-      // Reseta o contador de séries concluídas
       restCount.value = 0;
     };
 
-    // Função para salvar o tempo total no localStorage
     const saveTotalTime = () => {
       localStorage.setItem("totalTime", totalTime.value);
       $q.notify({
@@ -176,7 +168,6 @@ export default {
       });
     };
 
-    // Função para carregar o tempo total salvo no localStorage
     const loadTotalTime = () => {
       const savedTotalTime = localStorage.getItem("totalTime");
       if (savedTotalTime !== null) {
@@ -184,7 +175,6 @@ export default {
       }
     };
 
-    // Recebe mensagens do Web Worker
     timerWorker.onmessage = function (e) {
       if (e.data.timeRemaining !== undefined) {
         timeRemaining.value = e.data.timeRemaining;
@@ -204,7 +194,6 @@ export default {
       }
     };
 
-    // Carregar o tempo salvo no mounted
     onMounted(() => {
       loadTotalTime();
     });
@@ -233,30 +222,27 @@ export default {
 </script>
 
 <style>
-/* Seção do topo (total-time-container) */
 .total-time-container {
   width: 100%;
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px;
   margin-bottom: 12px;
-  display: flex;
-  align-items: center;
 }
 
 .total-time-label {
   font-size: 16px;
   color: white;
   margin-right: 8px;
-  margin-bottom: 4px;
   font-weight: bold;
-  text-align: right;
 }
 
 .total-time-save-btn {
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
+  font-size: 20px;
+  height: 36px;
+  width: 36px;
+  color: white;
 }
 
 .formatted-total-time {
@@ -266,16 +252,15 @@ export default {
   margin-right: 8px;
 }
 
-/* Seção central (central-container) */
 .central-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
   background-color: #333;
   border-radius: 10px;
+  padding: 20px;
 }
 
 .time-selector {
@@ -297,5 +282,9 @@ export default {
 .timer-button {
   width: 60px;
   height: 60px;
+}
+
+.q-page {
+  background-color: #1c1c1c;
 }
 </style>
