@@ -6,7 +6,7 @@
 <!-- Texto "Tempo Total" acima do cronômetro
       <div class="total-time-label">Tempo Total</div>
 
-    <!-- Botão para salvar o Tempo Total no localStorage 
+     Botão para salvar o Tempo Total no localStorage 
 <q-btn
   flat
   round
