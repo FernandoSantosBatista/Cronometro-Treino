@@ -152,64 +152,24 @@ export default {
         timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
-    
 
-const saveTotalTime = () => {
-  const $q = useQuasar(); // Adicione isso aqui
+    const saveTotalTime = () => {
+  // Recupera o array de tempos salvos do localStorage, ou inicializa um novo array se não houver
+  let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
 
-  // Usando o dialog para confirmação
-  $q.dialog({
-    title: 'Confirmação',
-    message: 'Deseja salvar o tempo total?',
-    ok: { label: 'Sim', color: 'positive' },
-    cancel: { label: 'Não', color: 'negative' },
-  }).onOk(() => {
-    // Recupera o array de tempos salvos do localStorage, ou inicializa um novo array se não houver
-    let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
+  // Adiciona o tempo atual ao array
+  savedTimes.push(totalTime.value);
 
-    // Gera um ID único (pode usar timestamp ou UUID se preferir)
-    const id = Date.now();
+  // Armazena o array atualizado no localStorage
+  localStorage.setItem('savedTimes', JSON.stringify(savedTimes));
 
-    // Converte o tempo total para horas, minutos e segundos
-    const totalSeconds = totalTime.value;
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    // Formata o tempo como HH:mm:ss
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-    // Obtém a data atual no formato dd/mm/yyyy hh:mm:ss
-    const now = new Date();
-    const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-
-    // Cria um objeto para armazenar os dados
-    const timeData = {
-      id: id,          // ID único
-      date: formattedDate,  // Data e hora formatada
-      time: formattedTime   // Tempo formatado como HH:mm:ss
-    };
-
-    // Adiciona o objeto ao array de tempos
-    savedTimes.push(timeData);
-
-    // Armazena o array atualizado no localStorage
-    localStorage.setItem('savedTimes', JSON.stringify(savedTimes));
-
-    // Exibe uma notificação de sucesso
-    $q.notify({
-      message: "Tempo total salvo com sucesso!",
-      color: "positive",
-      position: "top",
-    });
+  // Exibe uma notificação de sucesso
+  $q.notify({
+    message: "Tempo total salvo com sucesso!",
+    color: "positive",
+    position: "top",
   });
 };
-    
-
-
-    
-
-
 
     const getSavedTimes = () => {
   let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
@@ -259,17 +219,29 @@ const saveTotalTime = () => {
 
     // Função para resetar o Total Timer e alternar os botões
     const resetTotalTime = () => {
-  $q.dialog({
-    title: 'Confirmação',
-    message: 'Deseja realmente resetar o tempo total?',
-    ok: { label: 'Sim', color: 'positive' },
-    cancel: { label: 'Não', color: 'negative' },
-  }).onOk(() => {
-    timerWorker.postMessage({ command: 'resetTotal' });
-    showResetTotal.value = false;  // Mostra o botão Start e oculta o Reset
-  });
-};
+      timerWorker.postMessage({ command: 'resetTotal' });
+      showResetTotal.value = false;  // Mostra o botão Start e oculta o Reset
+    };
 
+    // Recebe mensagens do Web Worker
+    timerWorker.onmessage = function (e) {
+      if (e.data.timeRemaining !== undefined) {
+        timeRemaining.value = e.data.timeRemaining;
+
+        if (timeRemaining.value <= 0) {
+          timerRunning.value = false;
+          $q.notify({
+            message: "Tempo de descanso concluído!",
+            color: "primary",
+            position: "top",
+          });
+        }
+      }
+
+      if (e.data.totalTime !== undefined) {
+        totalTime.value = e.data.totalTime;
+      }
+    };
 
     onBeforeUnmount(() => {
       timerWorker.postMessage({ command: 'resetTotal' });
@@ -292,7 +264,6 @@ const saveTotalTime = () => {
       startTotalTimer,
       showResetTotal,  // Retorna a flag para controle de visibilidade
       saveTotalTime,
-      getSavedTimes,
     };
   },
 };
