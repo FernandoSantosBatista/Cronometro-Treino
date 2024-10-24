@@ -7,7 +7,15 @@
 
       <!-- Exibição do Tempo Total -->
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
-
+      <q-btn
+        flat
+         round
+  dense
+  icon="save"
+  @click="saveTotalTime"
+  size="20px"
+  class="total-time-save-btn"
+/>
       <!-- Botão Salvar Total Timer -->
       <q-btn
         flat
@@ -83,6 +91,15 @@ export default {
     const timerPaused = ref(false);
     const restCount = ref(0);
     const totalTime = ref(0);
+
+    const saveTotalTime = () => {
+      localStorage.setItem('totalTime', totalTime.value);
+       $q.notify({
+        message: "Tempo total salvo com sucesso!",
+        color: "positive",
+        position: "top",
+     });
+    };
 
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
