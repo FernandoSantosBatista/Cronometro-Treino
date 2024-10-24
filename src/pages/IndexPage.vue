@@ -176,15 +176,6 @@ export default {
       restCount.value = 0;
     };
 
-    const saveTotalTime = () => {
-      localStorage.setItem("totalTime", totalTime.value);
-      $q.notify({
-        message: "Tempo total salvo!",
-        color: "positive",
-        position: "top",
-      });
-    };
-
     const loadTotalTime = () => {
       const savedTotalTime = localStorage.getItem("totalTime");
       if (savedTotalTime !== null) {
