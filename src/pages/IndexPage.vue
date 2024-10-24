@@ -3,10 +3,10 @@
     <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
       
-<!-- Texto "Tempo Total" acima do cronômetro -->
+<!-- Texto "Tempo Total" acima do cronômetro
       <div class="total-time-label">Tempo Total</div>
 
-    <!-- Botão para salvar o Tempo Total no localStorage -->
+    <!-- Botão para salvar o Tempo Total no localStorage 
 <q-btn
   flat
   round
@@ -16,7 +16,7 @@
   size="20px"
   class="total-time-save-btn"
 />
-      
+       -->
       <q-btn
     v-if="showResetTotal"
     flat
