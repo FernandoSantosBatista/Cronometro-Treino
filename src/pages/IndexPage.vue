@@ -160,8 +160,14 @@ const saveTotalTime = () => {
   // Gera um ID único (pode usar timestamp ou UUID se preferir)
   const id = Date.now();
 
-  // Converte o tempo total para minutos
-  const timeInMinutes = Math.floor(totalTime.value / 60);
+  // Converte o tempo total para horas, minutos e segundos
+  const totalSeconds = totalTime.value;
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  // Formata o tempo como HH:mm:ss
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
   // Obtém a data atual no formato dd/mm/yyyy hh:mm:ss
   const now = new Date();
@@ -171,7 +177,7 @@ const saveTotalTime = () => {
   const timeData = {
     id: id,          // ID único
     date: formattedDate,  // Data e hora formatada
-    time: timeInMinutes   // Tempo em minutos
+    time: formattedTime   // Tempo formatado como HH:mm:ss
   };
 
   // Adiciona o objeto ao array de tempos
@@ -187,6 +193,8 @@ const saveTotalTime = () => {
     position: "top",
   });
 };
+
+
 
     const getSavedTimes = () => {
   let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
