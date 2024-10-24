@@ -1,31 +1,46 @@
 <template>
-  <q-page class="q-pa-md flex flex-column justify-between" style="background-color: #1c1c1c;">
+  <q-page class="q-pa-md flex flex-column justify-between">
     <!-- Seção do topo: Cronômetro de treino total -->
     <div class="total-time-container">
-      <!-- Texto "Tempo Total" acima do cronômetro -->
+      
+<!-- Texto "Tempo Total" acima do cronômetro -->
       <div class="total-time-label">Tempo Total</div>
 
-      <!-- Exibição do Tempo Total -->
-      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
-      <q-btn
-        flat
-         round
+    <!-- Botão para salvar o Tempo Total no localStorage -->
+<q-btn
+  flat
+  round
   dense
   icon="save"
   @click="saveTotalTime"
   size="20px"
   class="total-time-save-btn"
 />
-      <!-- Botão Salvar Total Timer -->
+      
       <q-btn
-        flat
-        round
-        dense
-        icon="save"
-        @click="saveTotalTime"
-        size="20px"
-        class="total-time-save-btn"
-      />
+    v-if="showResetTotal"
+    flat
+    round
+    dense
+    icon="pause"
+    @click="resetTotalTime"
+    size="20px"
+    class="total-time-reset-btn"
+  />
+  
+  <!-- Botão Start do Total Timer -->
+  <q-btn
+    v-if="!showResetTotal"
+    flat
+    round
+    dense
+    icon="play_arrow"
+    @click="startTotalTimer"
+    size="20px"
+    class="total-time-start-btn"
+  />
+
+      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
 
     <!-- Seção central com seletor de tempo, cronômetro e contador de séries -->
@@ -51,7 +66,6 @@
 
     <!-- Seção do rodapé com botões de controle -->
     <div class="button-container">
-      <!-- Botão de reset (funcional) -->
       <q-btn
         outline
         icon="refresh"
@@ -61,8 +75,6 @@
         size="md"
         class="timer-button"
       />
-
-      <!-- Botão de iniciar/pausar -->
       <q-btn
         outline
         :icon="playPauseIcon"
@@ -77,9 +89,10 @@
 </template>
 
 <script>
-import { ref, computed, onBeforeUnmount, onMounted } from "vue";
+  import { ref, computed, onBeforeUnmount } from "vue";
 import { useQuasar } from "quasar";
 
+// Importa o Web Worker
 const timerWorker = new Worker(new URL('../../timerWorker.js', import.meta.url));
 
 export default {
@@ -92,15 +105,7 @@ export default {
     const restCount = ref(0);
     const totalTime = ref(0);
 
-    const saveTotalTime = () => {
-      localStorage.setItem('totalTime', totalTime.value);
-       $q.notify({
-        message: "Tempo total salvo com sucesso!",
-        color: "positive",
-        position: "top",
-     });
-    };
-
+    const showResetTotal = ref(false);  // Controle para o botão Reset
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
       { label: "2 Minutos", value: 120 },
@@ -142,10 +147,20 @@ export default {
         timerRunning.value = true;
         timerPaused.value = false;
 
+        // Inicia o cronômetro de descanso no Web Worker
         timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
 
+    const saveTotalTime = () => {
+      localStorage.setItem('totalTime', totalTime.value);
+  $q.notify({
+       message: "Tempo total salvo com sucesso!",
+       color: "positive",
+       position: "top",
+  });
+};
+   
     const togglePlayPause = () => {
       if (!timerRunning.value) {
         startTimer();
@@ -157,32 +172,42 @@ export default {
     };
 
     const resumeTimer = () => {
+  // Retoma o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'resume' });
       timerPaused.value = false;
       timerRunning.value = true;
-    };
+   };
 
     const pauseTimer = () => {
+      // Pausa o cronômetro no Web Worker
       timerWorker.postMessage({ command: 'pause' });
       timerPaused.value = true;
     };
 
     const resetTimer = () => {
+      // Reseta apenas o cronômetro principal, sem tocar no totalTime
       timerWorker.postMessage({ command: 'reset', selectedTime: selectedTime.value.value });
       timerRunning.value = false;
       timerPaused.value = false;
-      timeRemaining.value = 0;
+      timeRemaining.value = 0; // Reseta o tempo restante
 
+      // Reseta o contador de séries concluídas
       restCount.value = 0;
     };
 
-    const loadTotalTime = () => {
-      const savedTotalTime = localStorage.getItem("totalTime");
-      if (savedTotalTime !== null) {
-        totalTime.value = parseInt(savedTotalTime);
-      }
+    // Função para iniciar o Total Timer e alternar os botões
+    const startTotalTimer = () => {
+      timerWorker.postMessage({ command: 'startTotal' });
+      showResetTotal.value = true;  // Mostra o botão Reset e oculta o Start
     };
 
+    // Função para resetar o Total Timer e alternar os botões
+    const resetTotalTime = () => {
+      timerWorker.postMessage({ command: 'resetTotal' });
+      showResetTotal.value = false;  // Mostra o botão Start e oculta o Reset
+    };
+
+    // Recebe mensagens do Web Worker
     timerWorker.onmessage = function (e) {
       if (e.data.timeRemaining !== undefined) {
         timeRemaining.value = e.data.timeRemaining;
@@ -202,10 +227,6 @@ export default {
       }
     };
 
-    onMounted(() => {
-      loadTotalTime();
-    });
-
     onBeforeUnmount(() => {
       timerWorker.postMessage({ command: 'resetTotal' });
     });
@@ -223,34 +244,48 @@ export default {
       resetTimer,
       startTimer,
       formattedTotalTime,
+      resetTotalTime,
+      startTotalTimer,
+      showResetTotal,  // Retorna a flag para controle de visibilidade
       saveTotalTime,
     };
   },
 };
+  
 </script>
 
 <style>
+/* Seção do topo (total-time-container) */
 .total-time-container {
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: right;
   padding: 10px;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.total-time-save-btn {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+  margin-left: 10px;
 }
 
 .total-time-label {
   font-size: 16px;
   color: white;
   margin-right: 8px;
+  margin-bottom: 4px;
   font-weight: bold;
+  text-align: right;
 }
 
-.total-time-save-btn {
-  font-size: 20px;
-  height: 36px;
-  width: 36px;
-  color: white;
+.total-time-reset-btn {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
 }
 
 .formatted-total-time {
@@ -260,15 +295,16 @@ export default {
   margin-right: 8px;
 }
 
+/* Seção central (central-container) */
 .central-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
   background-color: #333;
   border-radius: 10px;
-  padding: 20px;
 }
 
 .time-selector {
@@ -279,20 +315,53 @@ export default {
 .timer-row {
   font-size: 80px;
   color: white;
+  margin-bottom: 20px;
 }
 
+#rest-count {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Seção do rodapé (button-container) */
 .button-container {
   display: flex;
-  justify-content: center;
-  gap: 12px;
+  justify-content: space-around;
+  width: 100%;
+  padding: 20px;
+  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
 }
 
 .timer-button {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
 }
 
-.q-page {
+/* Estilo adicional */
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
+}
+
+.q-select__dialog {
+  color: white;
   background-color: #1c1c1c;
+}
+
+.q-field__label {
+  color: white;
+}
+
+.q-field__control {
+  color: white;
+}
+
+body {
+  background-color: #1c1c1c;
+  color: white;
+  font-family: "Poppins", sans-serif;
 }
 </style>
