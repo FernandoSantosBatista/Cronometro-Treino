@@ -85,7 +85,6 @@
         class="timer-button"
       />
     </div>
-    <p> {{ getSavedTimes }} </p>
   </q-page>
 </template>
 
