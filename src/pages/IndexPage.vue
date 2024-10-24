@@ -11,7 +11,7 @@
   flat
   round
   dense
-  icon="save"
+  icon="arrow_drop_down"
   @click="saveTotalTime"
   size="20px"
   class="total-time-save-btn"
