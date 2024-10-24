@@ -259,9 +259,6 @@ const saveTotalTime = () => {
 
     // Função para resetar o Total Timer e alternar os botões
     const resetTotalTime = () => {
-  const $q = useQuasar(); // Adicione isso aqui
-
-  // Usando o dialog para confirmação
   $q.dialog({
     title: 'Confirmação',
     message: 'Deseja realmente resetar o tempo total?',
@@ -272,6 +269,7 @@ const saveTotalTime = () => {
     showResetTotal.value = false;  // Mostra o botão Start e oculta o Reset
   });
 };
+
 
     onBeforeUnmount(() => {
       timerWorker.postMessage({ command: 'resetTotal' });
@@ -294,6 +292,7 @@ const saveTotalTime = () => {
       startTotalTimer,
       showResetTotal,  // Retorna a flag para controle de visibilidade
       saveTotalTime,
+      getSavedTimes,
     };
   },
 };
