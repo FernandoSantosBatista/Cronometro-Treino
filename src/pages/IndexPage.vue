@@ -153,12 +153,29 @@ export default {
       }
     };
 
-    const saveTotalTime = () => {
+const saveTotalTime = () => {
   // Recupera o array de tempos salvos do localStorage, ou inicializa um novo array se não houver
   let savedTimes = JSON.parse(localStorage.getItem('savedTimes')) || [];
 
-  // Adiciona o tempo atual ao array
-  savedTimes.push(totalTime.value);
+  // Gera um ID único (pode usar timestamp ou UUID se preferir)
+  const id = Date.now();
+
+  // Converte o tempo total para minutos
+  const timeInMinutes = Math.floor(totalTime.value / 60);
+
+  // Obtém a data atual no formato dd/mm/yyyy hh:mm:ss
+  const now = new Date();
+  const formattedDate = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+  // Cria um objeto para armazenar os dados
+  const timeData = {
+    id: id,          // ID único
+    date: formattedDate,  // Data e hora formatada
+    time: timeInMinutes   // Tempo em minutos
+  };
+
+  // Adiciona o objeto ao array de tempos
+  savedTimes.push(timeData);
 
   // Armazena o array atualizado no localStorage
   localStorage.setItem('savedTimes', JSON.stringify(savedTimes));
