@@ -17,18 +17,6 @@
         class="total-time-save-btn"
       />
 
-      <!-- Botão Start do Total Timer -->
-      <q-btn
-        v-if="!showResetTotal"
-        flat
-        round
-        dense
-        icon="play_arrow"
-        @click="startTotalTimer"
-        size="20px"
-        class="total-time-start-btn"
-      />
-
       <!-- Exibição do Tempo Total -->
       <div class="formatted-total-time">{{ formattedTotalTime }}</div>
     </div>
@@ -56,6 +44,7 @@
 
     <!-- Seção do rodapé com botões de controle -->
     <div class="button-container">
+      <!-- Botão de reset (funcional) -->
       <q-btn
         outline
         icon="refresh"
@@ -65,6 +54,8 @@
         size="md"
         class="timer-button"
       />
+
+      <!-- Botão de iniciar/pausar -->
       <q-btn
         outline
         :icon="playPauseIcon"
@@ -94,7 +85,6 @@ export default {
     const restCount = ref(0);
     const totalTime = ref(0);
 
-    const showResetTotal = ref(false);  // Controle para o botão Reset
     const timeOptions = [
       { label: "1 Minuto", value: 60 },
       { label: "2 Minutos", value: 120 },
@@ -141,7 +131,7 @@ export default {
         timerWorker.postMessage({ command: 'start', selectedTime: selectedTime.value.value });
       }
     };
-   
+
     const togglePlayPause = () => {
       if (!timerRunning.value) {
         startTimer();
@@ -174,12 +164,6 @@ export default {
 
       // Reseta o contador de séries concluídas
       restCount.value = 0;
-    };
-
-    // Função para iniciar o Total Timer e alternar os botões
-    const startTotalTimer = () => {
-      timerWorker.postMessage({ command: 'startTotal' });
-      showResetTotal.value = true;  // Mostra o botão Reset e oculta o Start
     };
 
     // Função para salvar o tempo total no localStorage
@@ -243,8 +227,6 @@ export default {
       startTimer,
       formattedTotalTime,
       saveTotalTime,
-      startTotalTimer,
-      showResetTotal,  // Retorna a flag para controle de visibilidade
     };
   },
 };
@@ -304,53 +286,16 @@ export default {
 .timer-row {
   font-size: 80px;
   color: white;
-  margin-bottom: 20px;
 }
 
-#rest-count {
-  font-size: 20px;
-  color: white;
-  margin-bottom: 20px;
-}
-
-/* Seção do rodapé (button-container) */
 .button-container {
   display: flex;
-  justify-content: space-around;
-  width: 100%;
-  padding: 20px;
-  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
+  justify-content: center;
+  gap: 12px;
 }
 
 .timer-button {
-  width: 70px;
-  height: 70px;
-}
-
-/* Estilo adicional */
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
-  color: white;
-}
-
-.q-select__dialog {
-  color: white;
-  background-color: #1c1c1c;
-}
-
-.q-field__label {
-  color: white;
-}
-
-.q-field__control {
-  color: white;
-}
-
-body {
-  background-color: #1c1c1c;
-  color: white;
-  font-family: "Poppins", sans-serif;
+  width: 60px;
+  height: 60px;
 }
 </style>
