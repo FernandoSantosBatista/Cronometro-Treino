@@ -65,10 +65,16 @@ defineOptions({
 
 const linksList = [
   {
-    title: "Treino",
-    caption: "cronômetro",
+    title: "Cronômetro",
+    caption: "Cronômetro de treino",
     icon: "schedule",
     link: "/",
+  },
+  {
+    title: "Tempo Total",
+    caption: "Tempo de treino guardado",
+    icon: "save",
+    link: "/registro",
   },
 ];
 
