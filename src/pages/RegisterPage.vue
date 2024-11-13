@@ -77,11 +77,11 @@ export default {
       },
     ];
 
-   const getSavedTimes = () => {
+   // Função que obtém e exibe os tempos do mais novo para o mais antigo
+    const getSavedTimes = () => {
      const times = JSON.parse(localStorage.getItem('savedTimes')) || [];
-     // Ordena os tempos do mais novo para o mais antigo
-      return times.sort((a, b) => new Date(b.date) - new Date(a.date));
-  };
+     return times.reverse(); // Exibe os mais recentes primeiro
+    };
 
     const confirmDelete = (id) => {
       deleteId.value = id;
