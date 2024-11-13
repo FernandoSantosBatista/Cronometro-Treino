@@ -194,50 +194,52 @@ export default {
       showSaveConfirmation.value = true;
     };
 
-    const confirmSaveTotalTime = () => {
-      let savedTimes = JSON.parse(localStorage.getItem("savedTimes")) || [];
-      const id = Date.now();
+   const confirmSaveTotalTime = () => {
+    let savedTimes = JSON.parse(localStorage.getItem("savedTimes")) || [];
+    const id = Date.now();
 
-      const totalSeconds = totalTime.value;
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+    const totalSeconds = totalTime.value;
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
-      const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-      const now = new Date();
-      const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(
-        now.getMonth() + 1
-      )
-        .toString()
-        .padStart(2, "0")}/${now.getFullYear()} ${now
-        .getHours()
-        .toString()
-        .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
-        .getSeconds()
-        .toString()
-        .padStart(2, "0")}`;
+   const now = new Date();
+   const formattedDate = `${now.getDate().toString().padStart(2, "0")}/${(
+    now.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}/${now.getFullYear()} ${now
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now
+    .getSeconds()
+    .toString()
+    .padStart(2, "0")}`;
 
-      const timeData = {
-        id: id,
-        date: formattedDate,
-        time: formattedTime,
-      };
+  const timeData = {
+    id: id,
+    date: formattedDate,
+    time: formattedTime,
+  };
 
-      savedTimes.push(timeData);
-      localStorage.setItem("savedTimes", JSON.stringify(savedTimes));
+  // Adiciona o novo tempo ao início do array
+  savedTimes.unshift(timeData);
+  localStorage.setItem("savedTimes", JSON.stringify(savedTimes));
 
-      $q.notify({
-        message: "Tempo total salvo com sucesso!",
-        color: "positive",
-        position: "top",
-      });
+  $q.notify({
+    message: "Tempo total salvo com sucesso!",
+    color: "positive",
+    position: "top",
+  });
 
-      // Fecha o diálogo após salvar
-      showSaveConfirmation.value = false;
-    };
+  // Fecha o diálogo após salvar
+  showSaveConfirmation.value = false;
+};
+    
 
     const getSavedTimes = () => {
       let savedTimes = JSON.parse(localStorage.getItem("savedTimes")) || [];
