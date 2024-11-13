@@ -78,8 +78,11 @@ export default {
     ];
 
     const getSavedTimes = () => {
-      return JSON.parse(localStorage.getItem('savedTimes')) || [];
-    };
+     const times = JSON.parse(localStorage.getItem('savedTimes')) || [];
+     // Ordena os tempos do mais novo para o mais antigo
+     return times.sort((a, b) => new Date(b.date) - new Date(a.date));
+};
+
 
     const confirmDelete = (id) => {
       deleteId.value = id;
