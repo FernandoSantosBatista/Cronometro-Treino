@@ -77,12 +77,8 @@ export default {
       },
     ];
 
-   const getSavedTimes = () => {
-     const times = JSON.parse(localStorage.getItem('savedTimes')) || [];
-     return times.sort((a, b) => {
-    // Converte as strings de data/hora para objetos Date para comparação
-       return new Date(b.date) - new Date(a.date);
-     });
+    const getSavedTimes = () => {
+      return JSON.parse(localStorage.getItem('savedTimes')) || [];
     };
 
     const confirmDelete = (id) => {
