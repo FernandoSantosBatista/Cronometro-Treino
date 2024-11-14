@@ -1,87 +1,114 @@
 <template>
-  <q-page padding>
-    <q-card class="q-mb-md" flat bordered>
-      <q-card-section>
-        <div class="text-h6 text-center">Cronômetro Total</div>
-        <div class="row justify-center q-gutter-sm">
-          <q-btn
-            flat
-            round
-            dense
-            icon="save"
-            color="positive"
-            @click="saveTotalTime"
-            label="Salvar"
-          />
-          <q-btn
-            v-if="showResetTotal"
-            flat
-            round
-            dense
-            icon="pause"
-            color="negative"
-            @click="showConfirmation = true"
-            label="Pausar"
-          />
-          <q-btn
-            v-if="!showResetTotal"
-            flat
-            round
-            dense
-            icon="play_arrow"
-            color="positive"
-            @click="startTotalTimer"
-            label="Iniciar"
-          />
-        </div>
-        <div class="text-center q-mt-md">{{ formattedTotalTime }}</div>
-      </q-card-section>
-    </q-card>
+  <q-page class="q-pa-md flex flex-column justify-between">
+    <div class="total-time-container">
+      <q-btn
+        flat
+        round
+        dense
+        icon="arrow_downward"
+        @click="saveTotalTime"
+        size="20px"
+        class="total-time-save-btn"
+      />
 
-    <q-card class="q-mb-md" flat bordered>
-      <q-card-section>
-        <div class="text-h6 text-center">Cronômetro de Descanso</div>
-        <q-select
-          v-model="selectedTime"
-          :options="timeOptions"
-          label="Selecione o tempo de descanso"
-          outlined
-          dense
-        />
-        <div class="text-center q-mt-md">{{ formattedTime }}</div>
-        <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
-      </q-card-section>
-      <q-card-actions align="center" class="q-gutter-sm">
-        <q-btn outline icon="refresh" color="primary" @click="resetTimer" rounded label="Resetar" />
-        <q-btn outline :icon="playPauseIcon" color="positive" @click="togglePlayPause" rounded label="Iniciar/Pausar" />
-      </q-card-actions>
-    </q-card>
+      <q-btn
+        v-if="showResetTotal"
+        flat
+        round
+        dense
+        icon="pause"
+        @click="showConfirmation = true"
+        size="20px"
+        class="total-time-reset-btn"
+      />
 
-    <!-- Diálogos de confirmação e notificações -->
-    <q-dialog v-model="showConfirmation">
-      <q-card>
-        <q-card-section class="text-center">
+      <q-btn
+        v-if="!showResetTotal"
+        flat
+        round
+        dense
+        icon="play_arrow"
+        @click="startTotalTimer"
+        size="20px"
+        class="total-time-start-btn"
+      />
+
+      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
+    </div>
+
+    <!-- Diálogo de confirmação para resetar o tempo total -->
+    <q-dialog v-model="showConfirmation" class="custom-dialog">
+      <q-card class="custom-card">
+        <q-card-section>
           <div class="text-h6">Confirmar Reset</div>
           <div>Você tem certeza que deseja resetar o cronômetro total?</div>
         </q-card-section>
-        <q-card-actions align="right">
+        <q-card-actions align="right" class="custom-card-actions">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn flat label="Confirmar" color="negative" @click="confirmResetTotalTime" />
+          <q-btn
+            flat
+            label="Confirmar"
+            color="negative"
+            @click="confirmResetTotalTime"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="showSaveConfirmation">
-      <q-card>
-        <q-card-section class="text-center">
+
+    <!-- Diálogo de confirmação para salvar o tempo total -->
+    <q-dialog v-model="showSaveConfirmation" class="custom-dialog">
+      <q-card class="custom-card">
+        <q-card-section>
           <div class="text-h6">Confirmar Salvar</div>
           <div>Você realmente quer salvar o tempo total?</div>
         </q-card-section>
-        <q-card-actions align="right">
+        <q-card-actions align="right" class="custom-card-actions">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn flat label="Salvar" color="positive" @click="confirmSaveTotalTime" />
+          <q-btn
+            flat
+            label="Salvar"
+            color="positive"
+            @click="confirmSaveTotalTime"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <div class="central-container">
+      <q-select
+        v-model="selectedTime"
+        :options="timeOptions"
+        label="Selecione o tempo de descanso"
+        outlined
+        dense
+        class="time-selector"
+      />
+      <div class="timer-row">
+        <span id="timer">{{ formattedTime }}</span>
+      </div>
+      <div id="rest-count">Séries concluídas: {{ restCount }}</div>
+    </div>
+
+    <div class="button-container">
+      <q-btn
+        outline
+        icon="refresh"
+        @click="resetTimer"
+        rounded
+        push
+        size="md"
+        class="timer-button"
+      />
+      <q-btn
+        outline
+        :icon="playPauseIcon"
+        @click="togglePlayPause"
+        rounded
+        push
+        size="md"
+        class="timer-button"
+      />
+    </div>
   </q-page>
 </template>
 
@@ -327,3 +354,150 @@ export default {
   },
 };
 </script>
+
+<style>
+/* Estilos personalizados para o diálogo */
+.custom-dialog {
+  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+}
+
+.custom-card {
+  background-color: #333; /* Cor de fundo do cartão */
+  color: white; /* Cor do texto dentro do cartão */
+}
+
+.custom-card .q-card-section {
+  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
+}
+
+.custom-card-actions {
+  background-color: #444; /* Cor de fundo das ações do cartão */
+}
+/* Seção do topo (total-time-container) */
+.total-time-container {
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  padding: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.total-time-save-btn {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+  margin-left: 10px;
+}
+
+.total-time-label {
+  font-size: 16px;
+  color: white;
+  margin-right: 8px;
+  margin-bottom: 4px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.total-time-reset-btn {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.formatted-total-time {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  margin-right: 8px;
+}
+
+/* Seção central (central-container) */
+.central-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
+  background-color: #333;
+  border-radius: 10px;
+}
+
+.time-selector {
+  margin-bottom: 20px;
+  width: 80%;
+}
+
+.timer-row {
+  font-size: 80px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+#rest-count {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+/* Seção do rodapé (button-container) */
+.button-container {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  padding: 20px;
+  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
+}
+
+.timer-button {
+  width: 70px;
+  height: 70px;
+}
+
+/* Estilos personalizados para o diálogo */
+.custom-dialog {
+  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+}
+
+.custom-card {
+  background-color: #333; /* Cor de fundo do cartão */
+  color: white; /* Cor do texto dentro do cartão */
+}
+
+.custom-card .q-card-section {
+  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
+}
+
+.custom-card-actions {
+  background-color: #444; /* Cor de fundo das ações do cartão */
+}
+
+/* Estilo adicional */
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
+}
+
+.q-select__dialog {
+  color: white;
+  background-color: #1c1c1c;
+}
+
+.q-field__label {
+  color: white;
+}
+
+.q-field__control {
+  color: white;
+}
+
+body {
+  background-color: #1c1c1c;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+</style>
