@@ -356,148 +356,127 @@ export default {
 </script>
 
 <style>
-/* Estilos personalizados para o diálogo */
-.custom-dialog {
-  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+  /* Geral */
+body {
+  background-color: #f5f5f5; /* Cor neutra para o fundo */
+  color: #333; /* Texto em um tom de cinza para boa legibilidade */
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
 }
 
-.custom-card {
-  background-color: #333; /* Cor de fundo do cartão */
-  color: white; /* Cor do texto dentro do cartão */
-}
-
-.custom-card .q-card-section {
-  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
-}
-
-.custom-card-actions {
-  background-color: #444; /* Cor de fundo das ações do cartão */
-}
-/* Seção do topo (total-time-container) */
+/* Contêiner de tempo total (topo) */
 .total-time-container {
-  width: 100%;
-  display: flex;
-  justify-content: right;
-  padding: 10px;
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  padding: 8px 16px;
+  background-color: #fff; /* Fundo branco para destacar */
+  border-bottom: 1px solid #ddd; /* Linha de separação suave */
 }
 
-.total-time-save-btn {
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
-  margin-left: 10px;
-}
-
-.total-time-label {
-  font-size: 16px;
-  color: white;
-  margin-right: 8px;
-  margin-bottom: 4px;
-  font-weight: bold;
-  text-align: right;
-}
-
-.total-time-reset-btn {
-  font-size: 28px;
-  height: 28px;
-  width: 28px;
+.total-time-save-btn,
+.total-time-reset-btn,
+.total-time-start-btn {
+  font-size: 24px;
+  color: #333;
+  margin-left: 12px;
 }
 
 .formatted-total-time {
-  font-size: 28px;
-  font-weight: bold;
-  color: white;
-  margin-right: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #555; /* Cor suave para o tempo */
 }
 
-/* Seção central (central-container) */
+/* Contêiner central (seletor e cronômetro) */
 .central-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 80px; /* Adiciona espaço entre a seção central e os botões */
-  background-color: #333;
-  border-radius: 10px;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra leve */
 }
 
 .time-selector {
   margin-bottom: 20px;
-  width: 80%;
+  width: 100%;
 }
 
 .timer-row {
-  font-size: 80px;
-  color: white;
-  margin-bottom: 20px;
+  font-size: 64px;
+  font-weight: 600;
+  color: #333;
+  margin: 16px 0;
 }
 
 #rest-count {
-  font-size: 20px;
-  color: white;
-  margin-bottom: 20px;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 8px;
 }
 
-/* Seção do rodapé (button-container) */
+/* Contêiner de botões (rodapé) */
 .button-container {
   display: flex;
   justify-content: space-around;
-  width: 100%;
-  padding: 20px;
-  margin-top: 40px; /* Adiciona mais espaço acima dos botões */
+  padding: 16px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
 }
 
 .timer-button {
-  width: 70px;
-  height: 70px;
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  color: #333;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s;
 }
 
-/* Estilos personalizados para o diálogo */
+.timer-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Estilos para diálogos */
 .custom-dialog {
-  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+  backdrop-filter: blur(3px); /* Desfoque suave no fundo */
 }
 
 .custom-card {
-  background-color: #333; /* Cor de fundo do cartão */
-  color: white; /* Cor do texto dentro do cartão */
+  background-color: #fff;
+  color: #333;
 }
 
 .custom-card .q-card-section {
-  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
+  border-bottom: 1px solid #eee;
 }
 
 .custom-card-actions {
-  background-color: #444; /* Cor de fundo das ações do cartão */
+  background-color: #f5f5f5;
 }
 
-/* Estilo adicional */
+/* Estilos adicionais para campos */
 .q-field__native,
 .q-field__prefix,
 .q-field__suffix,
 .q-field__input {
-  color: white;
-}
-
-.q-select__dialog {
-  color: white;
-  background-color: #1c1c1c;
+  color: #333;
 }
 
 .q-field__label {
-  color: white;
+  color: #777;
 }
 
+.q-select__dialog,
 .q-field__control {
-  color: white;
-}
-
-body {
-  background-color: #1c1c1c;
-  color: white;
-  font-family: "Poppins", sans-serif;
+  color: #333;
+  background-color: #fff;
 }
 </style>
