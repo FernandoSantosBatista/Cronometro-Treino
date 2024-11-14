@@ -1,6 +1,6 @@
 <template>
-  <q-page padding>
-    <div class="center-content">
+  <q-page padding class="center-content">
+    <div class="content-container">
       <q-card class="q-mb-md" flat bordered>
         <q-card-section>
           <div class="text-h6 text-center">Cronômetro Total</div>
@@ -60,7 +60,6 @@
     </div>
   </q-page>
 </template>
-
 
 <script>
 import { ref, computed, onBeforeUnmount } from "vue";
@@ -310,8 +309,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  min-height: 100vh;
 }
+
+.content-container {
+  margin-top: 20vh; /* Ajuste o valor para definir a posição vertical */
+}
+
 .large-text {
   font-size: 2rem; /* Ajuste conforme necessário */
 }
