@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-md flex flex-column justify-between">
-    <div class="total-time-container">
+  <q-page>
+    <div>
       <q-btn
         flat
         round
@@ -8,7 +8,6 @@
         icon="arrow_downward"
         @click="saveTotalTime"
         size="20px"
-        class="total-time-save-btn"
       />
 
       <q-btn
@@ -19,7 +18,6 @@
         icon="pause"
         @click="showConfirmation = true"
         size="20px"
-        class="total-time-reset-btn"
       />
 
       <q-btn
@@ -30,20 +28,19 @@
         icon="play_arrow"
         @click="startTotalTimer"
         size="20px"
-        class="total-time-start-btn"
       />
 
-      <div class="formatted-total-time">{{ formattedTotalTime }}</div>
+      <div>{{ formattedTotalTime }}</div>
     </div>
 
     <!-- Diálogo de confirmação para resetar o tempo total -->
-    <q-dialog v-model="showConfirmation" class="custom-dialog">
-      <q-card class="custom-card">
+    <q-dialog v-model="showConfirmation">
+      <q-card>
         <q-card-section>
-          <div class="text-h6">Confirmar Reset</div>
+          <div>Confirmar Reset</div>
           <div>Você tem certeza que deseja resetar o cronômetro total?</div>
         </q-card-section>
-        <q-card-actions align="right" class="custom-card-actions">
+        <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
           <q-btn
             flat
@@ -56,13 +53,13 @@
     </q-dialog>
 
     <!-- Diálogo de confirmação para salvar o tempo total -->
-    <q-dialog v-model="showSaveConfirmation" class="custom-dialog">
-      <q-card class="custom-card">
+    <q-dialog v-model="showSaveConfirmation">
+      <q-card>
         <q-card-section>
-          <div class="text-h6">Confirmar Salvar</div>
+          <div>Confirmar Salvar</div>
           <div>Você realmente quer salvar o tempo total?</div>
         </q-card-section>
-        <q-card-actions align="right" class="custom-card-actions">
+        <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
           <q-btn
             flat
@@ -74,22 +71,21 @@
       </q-card>
     </q-dialog>
 
-    <div class="central-container">
+    <div>
       <q-select
         v-model="selectedTime"
         :options="timeOptions"
         label="Selecione o tempo de descanso"
         outlined
         dense
-        class="time-selector"
       />
-      <div class="timer-row">
-        <span id="timer">{{ formattedTime }}</span>
+      <div>
+        <span>{{ formattedTime }}</span>
       </div>
-      <div id="rest-count">Séries concluídas: {{ restCount }}</div>
+      <div>Séries concluídas: {{ restCount }}</div>
     </div>
 
-    <div class="button-container">
+    <div>
       <q-btn
         outline
         icon="refresh"
@@ -97,7 +93,6 @@
         rounded
         push
         size="md"
-        class="timer-button"
       />
       <q-btn
         outline
@@ -106,11 +101,11 @@
         rounded
         push
         size="md"
-        class="timer-button"
       />
     </div>
   </q-page>
 </template>
+
 
 <script>
 import { ref, computed, onBeforeUnmount } from "vue";
@@ -354,129 +349,3 @@ export default {
   },
 };
 </script>
-
-<style>
-  /* Geral */
-body {
-  background-color: #f5f5f5; /* Cor neutra para o fundo */
-  color: #333; /* Texto em um tom de cinza para boa legibilidade */
-  font-family: "Poppins", sans-serif;
-  font-size: 16px;
-  margin: 0;
-  padding: 0;
-}
-
-/* Contêiner de tempo total (topo) */
-.total-time-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 8px 16px;
-  background-color: #fff; /* Fundo branco para destacar */
-  border-bottom: 1px solid #ddd; /* Linha de separação suave */
-}
-
-.total-time-save-btn,
-.total-time-reset-btn,
-.total-time-start-btn {
-  font-size: 24px;
-  color: #333;
-  margin-left: 12px;
-}
-
-.formatted-total-time {
-  font-size: 18px;
-  font-weight: 500;
-  color: #555; /* Cor suave para o tempo */
-}
-
-/* Contêiner central (seletor e cronômetro) */
-.central-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px;
-  background-color: #fff;
-  border-radius: 8px;
-  margin: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra leve */
-}
-
-.time-selector {
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.timer-row {
-  font-size: 64px;
-  font-weight: 600;
-  color: #333;
-  margin: 16px 0;
-}
-
-#rest-count {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 8px;
-}
-
-/* Contêiner de botões (rodapé) */
-.button-container {
-  display: flex;
-  justify-content: space-around;
-  padding: 16px;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-}
-
-.timer-button {
-  width: 56px;
-  height: 56px;
-  font-size: 24px;
-  color: #333;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 1px solid #ddd;
-  transition: background-color 0.3s;
-}
-
-.timer-button:hover {
-  background-color: #f0f0f0;
-}
-
-/* Estilos para diálogos */
-.custom-dialog {
-  backdrop-filter: blur(3px); /* Desfoque suave no fundo */
-}
-
-.custom-card {
-  background-color: #fff;
-  color: #333;
-}
-
-.custom-card .q-card-section {
-  border-bottom: 1px solid #eee;
-}
-
-.custom-card-actions {
-  background-color: #f5f5f5;
-}
-
-/* Estilos adicionais para campos */
-.q-field__native,
-.q-field__prefix,
-.q-field__suffix,
-.q-field__input {
-  color: #333;
-}
-
-.q-field__label {
-  color: #777;
-}
-
-.q-select__dialog,
-.q-field__control {
-  color: #333;
-  background-color: #fff;
-}
-</style>
