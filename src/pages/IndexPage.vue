@@ -1,111 +1,89 @@
 <template>
-  <q-page>
-    <div>
-      <q-btn
-        flat
-        round
-        dense
-        icon="arrow_downward"
-        @click="saveTotalTime"
-        size="20px"
-      />
+  <q-page padding>
+    <q-card class="q-mb-md" flat bordered>
+      <q-card-section>
+        <div class="text-h6 text-center">Cronômetro Total</div>
+        <div class="row justify-center q-gutter-sm">
+          <q-btn
+            flat
+            round
+            dense
+            icon="save"
+            color="positive"
+            @click="saveTotalTime"
+            label="Salvar"
+          />
+          <q-btn
+            v-if="showResetTotal"
+            flat
+            round
+            dense
+            icon="pause"
+            color="negative"
+            @click="showConfirmation = true"
+            label="Pausar"
+          />
+          <q-btn
+            v-if="!showResetTotal"
+            flat
+            round
+            dense
+            icon="play_arrow"
+            color="positive"
+            @click="startTotalTimer"
+            label="Iniciar"
+          />
+        </div>
+        <div class="text-center q-mt-md">{{ formattedTotalTime }}</div>
+      </q-card-section>
+    </q-card>
 
-      <q-btn
-        v-if="showResetTotal"
-        flat
-        round
-        dense
-        icon="pause"
-        @click="showConfirmation = true"
-        size="20px"
-      />
+    <q-card class="q-mb-md" flat bordered>
+      <q-card-section>
+        <div class="text-h6 text-center">Cronômetro de Descanso</div>
+        <q-select
+          v-model="selectedTime"
+          :options="timeOptions"
+          label="Selecione o tempo de descanso"
+          outlined
+          dense
+        />
+        <div class="text-center q-mt-md">{{ formattedTime }}</div>
+        <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
+      </q-card-section>
+      <q-card-actions align="center" class="q-gutter-sm">
+        <q-btn outline icon="refresh" color="primary" @click="resetTimer" rounded label="Resetar" />
+        <q-btn outline :icon="playPauseIcon" color="positive" @click="togglePlayPause" rounded label="Iniciar/Pausar" />
+      </q-card-actions>
+    </q-card>
 
-      <q-btn
-        v-if="!showResetTotal"
-        flat
-        round
-        dense
-        icon="play_arrow"
-        @click="startTotalTimer"
-        size="20px"
-      />
-
-      <div>{{ formattedTotalTime }}</div>
-    </div>
-
-    <!-- Diálogo de confirmação para resetar o tempo total -->
+    <!-- Diálogos de confirmação e notificações -->
     <q-dialog v-model="showConfirmation">
       <q-card>
-        <q-card-section>
-          <div>Confirmar Reset</div>
+        <q-card-section class="text-center">
+          <div class="text-h6">Confirmar Reset</div>
           <div>Você tem certeza que deseja resetar o cronômetro total?</div>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Confirmar"
-            color="negative"
-            @click="confirmResetTotalTime"
-          />
+          <q-btn flat label="Confirmar" color="negative" @click="confirmResetTotalTime" />
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-    <!-- Diálogo de confirmação para salvar o tempo total -->
     <q-dialog v-model="showSaveConfirmation">
       <q-card>
-        <q-card-section>
-          <div>Confirmar Salvar</div>
+        <q-card-section class="text-center">
+          <div class="text-h6">Confirmar Salvar</div>
           <div>Você realmente quer salvar o tempo total?</div>
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Salvar"
-            color="positive"
-            @click="confirmSaveTotalTime"
-          />
+          <q-btn flat label="Salvar" color="positive" @click="confirmSaveTotalTime" />
         </q-card-actions>
       </q-card>
     </q-dialog>
-
-    <div>
-      <q-select
-        v-model="selectedTime"
-        :options="timeOptions"
-        label="Selecione o tempo de descanso"
-        outlined
-        dense
-      />
-      <div>
-        <span>{{ formattedTime }}</span>
-      </div>
-      <div>Séries concluídas: {{ restCount }}</div>
-    </div>
-
-    <div>
-      <q-btn
-        outline
-        icon="refresh"
-        @click="resetTimer"
-        rounded
-        push
-        size="md"
-      />
-      <q-btn
-        outline
-        :icon="playPauseIcon"
-        @click="togglePlayPause"
-        rounded
-        push
-        size="md"
-      />
-    </div>
   </q-page>
 </template>
-
 
 <script>
 import { ref, computed, onBeforeUnmount } from "vue";
