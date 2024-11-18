@@ -63,7 +63,7 @@
 </q-dialog>
 
       <!-- Modal de Confirmação -->
-      <q-dialog v-model="showSaveConfirmation">
+      <q-dialog v-model="showSaveConfirmation" class="custom-dialog">
         <q-card style="background-color: #444; color: white;">
           <q-card-section>
             <div class="text-h6">Salvar tempo total?</div>
