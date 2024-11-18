@@ -36,7 +36,7 @@
               label="Iniciar"
             />
           </div>
-          <div class="text-center q-mt-md">{{ formattedTotalTime }}</div>
+          <div class="text-center q-mt-md" style="font-size: 3rem; font-weight: bold;">{{ formattedTotalTime }}</div>
         </q-card-section>
       </q-card>
 
@@ -81,7 +81,9 @@
             style="background-color: #444; color: white;"
             input-style="color: white;"
           />
-          <div class="text-center q-mt-md">{{ formattedTime }}</div>
+          <div class="text-center q-mt-md" style="font-size: 2.5rem; font-weight: bold;">
+  {{ formattedTime }}
+</div>
           <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
         </q-card-section>
         <q-card-actions align="center" class="q-gutter-sm">
