@@ -2,10 +2,10 @@
   <q-page class="flex flex-center q-pa-md" style="background-color: #1c1c1c;">
     <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
       <!-- Cronômetro Total -->
-      <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
+      <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
         <q-card-section>
-          <div class="text-h6 text-center">Cronômetro Total</div>
-          <div class="row justify-center q-gutter-sm">
+          <div class="text-h5 text-bold text-center">Cronômetro Total</div>
+          <div class="row justify-center q-gutter-sm q-mt-sm">
             <q-btn
               flat
               round
@@ -14,6 +14,7 @@
               color="positive"
               @click="saveTotalTime"
               label="Salvar"
+              class="q-mr-xs"
             />
             <q-btn
               v-if="showResetTotal"
@@ -26,7 +27,7 @@
               label="Pausar"
             />
             <q-btn
-              v-if="!showResetTotal"
+              v-else
               flat
               round
               dense
@@ -36,42 +37,28 @@
               label="Iniciar"
             />
           </div>
-          <div class="text-center q-mt-md" style="font-size: 2rem;">{{ formattedTotalTime }}</div>
+          <div class="text-center q-mt-md text-h4">{{ formattedTotalTime }}</div>
         </q-card-section>
       </q-card>
 
-      <!-- Modal de confirmação para salvar -->
-    <q-dialog v-model="showSaveConfirmation">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Salvar tempo total?</div>
-          <div class="q-mt-sm">Deseja salvar o cronômetro total atual?</div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="negative" v-close-popup />
-          <q-btn flat label="Salvar" color="positive" @click="confirmSaveTotalTime" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <!-- Modal de confirmação para resetar -->
-    <q-dialog v-model="showConfirmation">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Resetar tempo total?</div>
-          <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="negative" v-close-popup />
-          <q-btn flat label="Confirmar" color="positive" @click="confirmResetTotalTime" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+      <!-- Modal de Confirmação -->
+      <q-dialog v-model="showSaveConfirmation">
+        <q-card style="background-color: #444; color: white;">
+          <q-card-section>
+            <div class="text-h6">Salvar tempo total?</div>
+            <p class="text-body-2 q-mt-xs">Deseja salvar o cronômetro total atual?</p>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Cancelar" color="negative" v-close-popup />
+            <q-btn flat label="Salvar" color="positive" @click="confirmSaveTotalTime" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <!-- Cronômetro de Descanso -->
-      <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
+      <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
         <q-card-section>
-          <div class="text-h6 text-center">Cronômetro de Descanso</div>
+          <div class="text-h5 text-bold text-center">Cronômetro de Descanso</div>
           <q-select
             v-model="selectedTime"
             :options="timeOptions"
@@ -80,11 +67,12 @@
             dense
             style="background-color: #444; color: white;"
             input-style="color: white;"
+            class="q-mt-md"
           />
-          <div class="text-center q-mt-md" style="font-size: 2.5rem;">
-  {{ formattedTime }}
-</div>
-          <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
+          <div class="text-center q-mt-md text-h4">{{ formattedTime }}</div>
+          <div class="text-center q-mt-sm text-body-2">
+            Séries concluídas: <strong>{{ restCount }}</strong>
+          </div>
         </q-card-section>
         <q-card-actions align="center" class="q-gutter-sm">
           <q-btn outline icon="refresh" color="primary" @click="resetTimer" rounded label="Resetar" />
@@ -94,7 +82,6 @@
     </div>
   </q-page>
 </template>
-
 
 <script>
 import { ref, computed, onBeforeUnmount } from "vue";
