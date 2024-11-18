@@ -49,6 +49,19 @@
         </q-card-section>
       </q-card>
 
+      <q-dialog v-model="showConfirmation">
+  <q-card>
+    <q-card-section>
+      <div class="text-h6">Resetar tempo total?</div>
+      <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
+    </q-card-section>
+    <q-card-actions align="right">
+      <q-btn flat label="Cancelar" color="negative" v-close-popup />
+      <q-btn flat label="Confirmar" color="positive" @click="confirmResetTotalTime" />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
+
       <!-- Modal de Confirmação -->
       <q-dialog v-model="showSaveConfirmation">
         <q-card style="background-color: #444; color: white;">
