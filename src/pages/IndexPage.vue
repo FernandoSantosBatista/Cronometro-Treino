@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center q-pa-md" style="background-color: #1c1c1c;">
-    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
+    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 300px">
       <!-- Cronômetro Total -->
       <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
         <q-card-section>
