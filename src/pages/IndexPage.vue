@@ -50,7 +50,7 @@
       </q-card>
 
       <q-dialog v-model="showConfirmation">
-  <q-card>
+  <q-card style="background-color: #444; color: white;">
     <q-card-section>
       <div class="text-h6">Resetar tempo total?</div>
       <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
