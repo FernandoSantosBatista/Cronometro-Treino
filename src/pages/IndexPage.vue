@@ -5,38 +5,46 @@
       <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
         <q-card-section>
           <div class="text-h5 text-bold text-center">Cronômetro Total</div>
+
           <div class="row justify-center q-gutter-sm q-mt-sm">
-            <q-btn
-              flat
-              round
-              dense
-              icon="save"
-              color="positive"
-              @click="saveTotalTime"
-              label="Salvar"
-              class="q-mr-xs"
-            />
-            <q-btn
-              v-if="showResetTotal"
-              flat
-              round
-              dense
-              icon="pause"
-              color="negative"
-              @click="requestTotalTimeReset"
-              label="Pausar"
-            />
-            <q-btn
-              v-else
-              flat
-              round
-              dense
-              icon="play_arrow"
-              color="positive"
-              @click="startTotalTimer"
-              label="Iniciar"
-            />
-          </div>
+  <!-- Botão Salvar -->
+  <q-btn
+    flat
+    round
+    dense
+    icon="save"
+    color="positive"
+    @click="saveTotalTime"
+    label="Salvar"
+    class="q-mr-xs"
+  />
+
+  <!-- Botão Pausar -->
+  <q-btn
+    v-if="showResetTotal"
+    flat
+    round
+    dense
+    icon="pause"
+    color="negative"
+    @click="requestTotalTimeReset"
+    label="Pausar"
+  />
+
+  <!-- Botão Iniciar -->
+  <q-btn
+    v-else
+    flat
+    round
+    dense
+    icon="play_arrow"
+    color="positive"
+    @click="startTotalTimer"
+    label="Iniciar"
+  />
+</div>
+
+          
           <div class="text-center q-mt-md text-h4">{{ formattedTotalTime }}</div>
         </q-card-section>
       </q-card>
