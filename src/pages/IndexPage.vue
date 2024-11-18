@@ -325,3 +325,16 @@ export default {
   },
 };
 </script>
+
+<style>
+  @media (max-width: 600px) {
+  .container {
+    max-width: 90%;
+  }
+  }
+
+  .q-btn:hover {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+</style>
