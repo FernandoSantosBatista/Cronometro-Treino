@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center q-pa-md">
     <!-- Contêiner para centralização -->
-    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
+    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 300px">
       <!-- Container do Cronômetro Total -->
     <q-card class="q-mb-md full-width" flat bordered>
       <q-card-section>
