@@ -1,7 +1,8 @@
 <template>
   <q-page class="flex flex-center q-pa-md">
-  <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
-    <!-- Cronômetro Total -->
+    <!-- Contêiner para centralização -->
+    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
+      <!-- Container do Cronômetro Total -->
     <q-card class="q-mb-md full-width" flat bordered>
       <q-card-section>
         <div class="text-h6 text-center">Cronômetro Total</div>
@@ -67,9 +68,30 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </div>
-</q-page>
   
+      
+
+      <!-- Container do Cronômetro de Descanso -->
+      <q-card class="q-mb-md full-width" flat bordered>
+        <q-card-section>
+          <div class="text-h6 text-center">Cronômetro de Descanso</div>
+          <q-select
+            v-model="selectedTime"
+            :options="timeOptions"
+            label="Selecione o tempo de descanso"
+            outlined
+            dense
+          />
+          <div class="text-center q-mt-md">{{ formattedTime }}</div>
+          <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
+        </q-card-section>
+        <q-card-actions align="center" class="q-gutter-sm">
+          <q-btn outline icon="refresh" color="primary" @click="resetTimer" rounded label="Resetar" />
+          <q-btn outline :icon="playPauseIcon" color="positive" @click="togglePlayPause" rounded label="Iniciar/Pausar" />
+        </q-card-actions>
+      </q-card>
+    </div>
+  </q-page>
 </template>
 
 
