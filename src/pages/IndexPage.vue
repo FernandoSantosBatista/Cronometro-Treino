@@ -49,7 +49,7 @@
         </q-card-section>
       </q-card>
 
-      <q-dialog v-model="showConfirmation">
+      <q-dialog v-model="showConfirmation" class="custom-dialog">
   <q-card style="background-color: #444; color: white;">
     <q-card-section>
       <div class="text-h6">Resetar tempo total?</div>
