@@ -1,78 +1,47 @@
 <template>
   <q-page class="flex flex-center q-pa-md" style="background-color: #1c1c1c;">
-    <!-- Contêiner para centralização -->
-    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 300px">
-      <!-- Container do Cronômetro Total -->
-    <q-card style="background-color: #333; color: white;">
-      <q-card-section>
-        <div class="text-h6 text-center">Cronômetro Total</div>
-        <div class="row justify-center q-gutter-sm">
-          <q-btn
-            flat
-            round
-            dense
-            icon="save"
-            color="positive"
-            @click="saveTotalTime"
-            label="Salvar"
-          />
-          <q-btn
-            v-if="showResetTotal"
-            flat
-            round
-            dense
-            icon="pause"
-            color="negative"
-            @click="requestTotalTimeReset"
-            label="Pausar"
-          />
-          <q-btn
-            v-if="!showResetTotal"
-            flat
-            round
-            dense
-            icon="play_arrow"
-            color="positive"
-            @click="startTotalTimer"
-            label="Iniciar"
-          />
-        </div>
-        <div class="text-center q-mt-md">{{ formattedTotalTime }}</div>
-      </q-card-section>
-    </q-card>
-
-    <!-- Modal de confirmação para salvar -->
-    <q-dialog v-model="showSaveConfirmation">
-      <q-card>
+    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
+      <!-- Cronômetro Total -->
+      <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
         <q-card-section>
-          <div class="text-h6">Salvar tempo total?</div>
-          <div class="q-mt-sm">Deseja salvar o cronômetro total atual?</div>
+          <div class="text-h6 text-center">Cronômetro Total</div>
+          <div class="row justify-center q-gutter-sm">
+            <q-btn
+              flat
+              round
+              dense
+              icon="save"
+              color="positive"
+              @click="saveTotalTime"
+              label="Salvar"
+            />
+            <q-btn
+              v-if="showResetTotal"
+              flat
+              round
+              dense
+              icon="pause"
+              color="negative"
+              @click="requestTotalTimeReset"
+              label="Pausar"
+            />
+            <q-btn
+              v-if="!showResetTotal"
+              flat
+              round
+              dense
+              icon="play_arrow"
+              color="positive"
+              @click="startTotalTimer"
+              label="Iniciar"
+            />
+          </div>
+          <div class="text-center q-mt-md">{{ formattedTotalTime }}</div>
         </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="negative" v-close-popup />
-          <q-btn flat label="Salvar" color="positive" @click="confirmSaveTotalTime" />
-        </q-card-actions>
       </q-card>
-    </q-dialog>
 
-    <!-- Modal de confirmação para resetar -->
-    <q-dialog v-model="showConfirmation">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Resetar tempo total?</div>
-          <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="negative" v-close-popup />
-          <q-btn flat label="Confirmar" color="positive" @click="confirmResetTotalTime" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-  
-      
-
-      <!-- Container do Cronômetro de Descanso -->
-      <q-card class="q-mb-md full-width" flat bordered>
+      <!-- Cronômetro de Descanso -->
+      <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
         <q-card-section>
           <div class="text-h6 text-center">Cronômetro de Descanso</div>
           <q-select
@@ -82,7 +51,7 @@
             outlined
             dense
             style="background-color: #444; color: white;"
-  input-style="color: white;"
+            input-style="color: white;"
           />
           <div class="text-center q-mt-md">{{ formattedTime }}</div>
           <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
