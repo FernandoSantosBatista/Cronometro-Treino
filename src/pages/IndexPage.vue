@@ -1,9 +1,9 @@
 <template>
-  <q-page class="flex flex-center q-pa-md">
+  <q-page class="flex flex-center q-pa-md" style="background-color: #1c1c1c;">
     <!-- Contêiner para centralização -->
     <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 300px">
       <!-- Container do Cronômetro Total -->
-    <q-card class="q-mb-md full-width" flat bordered>
+    <q-card style="background-color: #333; color: white;">
       <q-card-section>
         <div class="text-h6 text-center">Cronômetro Total</div>
         <div class="row justify-center q-gutter-sm">
@@ -81,6 +81,8 @@
             label="Selecione o tempo de descanso"
             outlined
             dense
+            style="background-color: #444; color: white;"
+  input-style="color: white;"
           />
           <div class="text-center q-mt-md">{{ formattedTime }}</div>
           <div class="text-center q-mt-sm">Séries concluídas: {{ restCount }}</div>
