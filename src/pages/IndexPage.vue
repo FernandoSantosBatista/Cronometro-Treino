@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center q-pa-md" style="background-color: #1c1c1c;">
-    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 300px">
+    <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
       <!-- Cronômetro Total -->
       <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
         <q-card-section>
@@ -39,6 +39,34 @@
           <div class="text-center q-mt-md">{{ formattedTotalTime }}</div>
         </q-card-section>
       </q-card>
+
+      <!-- Modal de confirmação para salvar -->
+    <q-dialog v-model="showSaveConfirmation">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Salvar tempo total?</div>
+          <div class="q-mt-sm">Deseja salvar o cronômetro total atual?</div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="negative" v-close-popup />
+          <q-btn flat label="Salvar" color="positive" @click="confirmSaveTotalTime" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Modal de confirmação para resetar -->
+    <q-dialog v-model="showConfirmation">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Resetar tempo total?</div>
+          <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="negative" v-close-popup />
+          <q-btn flat label="Confirmar" color="positive" @click="confirmResetTotalTime" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
       <!-- Cronômetro de Descanso -->
       <q-card class="q-mb-md full-width" flat bordered style="background-color: #333; color: white;">
