@@ -357,5 +357,25 @@ export default {
   .q-btn:hover {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
+  /* Estilo adicional */
+.q-field__native,
+.q-field__prefix,
+.q-field__suffix,
+.q-field__input {
+  color: white;
+}
+
+.q-select__dialog {
+  color: white;
+  background-color: #1c1c1c;
+}
+
+.q-field__label {
+  color: white;
+}
+
+.q-field__control {
+  color: white;
+}
 
 </style>
