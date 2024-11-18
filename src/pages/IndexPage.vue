@@ -357,6 +357,25 @@ export default {
   .q-btn:hover {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
+
+/* Estilos personalizados para o diálogo */
+.custom-dialog {
+  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
+}
+
+.custom-card {
+  background-color: #333; /* Cor de fundo do cartão */
+  color: white; /* Cor do texto dentro do cartão */
+}
+
+.custom-card .q-card-section {
+  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
+}
+
+.custom-card-actions {
+  background-color: #444; /* Cor de fundo das ações do cartão */
+}
+  
   /* Estilo adicional */
 .q-field__native,
 .q-field__prefix,
