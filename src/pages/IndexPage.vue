@@ -2,69 +2,65 @@
   <q-page class="flex flex-center q-pa-md" style="background-color: #1c1c1c;">
     <div class="column items-center justify-center full-width q-gutter-md" style="max-width: 400px">
       <!-- Cronômetro Total -->
-      <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
+      <q-card flat bordered class="total-timer-card">
         <q-card-section>
           <div class="text-h5 text-bold text-center">Tempo Total</div>
-
           <div class="row justify-center q-gutter-sm q-mt-sm">
-  <!-- Botão Salvar -->
-  <q-btn
-    flat
-    round
-    dense
-    icon="save"
-    color="positive"
-    @click="saveTotalTime"
-    label="Salvar"
-    class="q-mr-xs"
-  />
-
-  <!-- Botão Pausar -->
-  <q-btn
-    v-if="showResetTotal"
-    flat
-    round
-    dense
-    icon="pause"
-    color="negative"
-    @click="requestTotalTimeReset"
-    label="Pausar"
-  />
-
-  <!-- Botão Iniciar -->
-  <q-btn
-    v-else
-    flat
-    round
-    dense
-    icon="play_arrow"
-    color="positive"
-    @click="startTotalTimer"
-    label="Iniciar"
-  />
-</div>
-
-          
+            <!-- Botão Salvar -->
+            <q-btn
+              flat
+              round
+              dense
+              icon="save"
+              color="positive"
+              @click="saveTotalTime"
+              label="Salvar"
+              class="q-mr-xs"
+            />
+            <!-- Botão Pausar -->
+            <q-btn
+              v-if="showResetTotal"
+              flat
+              round
+              dense
+              icon="pause"
+              color="negative"
+              @click="requestTotalTimeReset"
+              label="Pausar"
+            />
+            <!-- Botão Iniciar -->
+            <q-btn
+              v-else
+              flat
+              round
+              dense
+              icon="play_arrow"
+              color="positive"
+              @click="startTotalTimer"
+              label="Iniciar"
+            />
+          </div>
           <div class="text-center q-mt-md text-h4">{{ formattedTotalTime }}</div>
         </q-card-section>
       </q-card>
 
-      <q-dialog v-model="showConfirmation" class="custom-dialog">
-  <q-card style="background-color: #444; color: white;">
-    <q-card-section>
-      <div class="text-h6">Resetar tempo total?</div>
-      <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
-    </q-card-section>
-    <q-card-actions align="right">
-      <q-btn flat label="Cancelar" color="negative" v-close-popup />
-      <q-btn flat label="Confirmar" color="positive" @click="confirmResetTotalTime" />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
-
       <!-- Modal de Confirmação -->
+      <q-dialog v-model="showConfirmation" class="custom-dialog">
+        <q-card class="dialog-card">
+          <q-card-section>
+            <div class="text-h6">Resetar tempo total?</div>
+            <div class="q-mt-sm">Deseja realmente resetar o cronômetro total?</div>
+          </q-card-section>
+          <q-card-actions align="right">
+            <q-btn flat label="Cancelar" color="negative" v-close-popup />
+            <q-btn flat label="Confirmar" color="positive" @click="confirmResetTotalTime" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <!-- Modal de Salvar -->
       <q-dialog v-model="showSaveConfirmation" class="custom-dialog">
-        <q-card style="background-color: #444; color: white;">
+        <q-card class="dialog-card">
           <q-card-section>
             <div class="text-h6">Salvar tempo total?</div>
             <p class="text-body-2 q-mt-xs">Deseja salvar o cronômetro total atual?</p>
@@ -77,7 +73,7 @@
       </q-dialog>
 
       <!-- Cronômetro de Descanso -->
-      <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
+      <q-card flat bordered class="rest-timer-card">
         <q-card-section>
           <div class="text-h5 text-bold text-center">Séries</div>
           <q-select
@@ -86,9 +82,7 @@
             label="Selecione o tempo de descanso"
             outlined
             dense
-            style="background-color: #444; color: white;"
-            input-style="color: white;"
-            class="q-mt-md"
+            class="rest-select"
           />
           <div class="text-center q-mt-md text-h4">{{ formattedTime }}</div>
           <div class="text-center q-mt-sm text-body-2">
@@ -348,6 +342,41 @@ export default {
 </script>
 
 <style>
+/* Página principal */
+.q-page {
+  background-color: #1c1c1c;
+}
+
+/* Cartão de cronômetro total */
+.total-timer-card {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+}
+
+/* Cartão de diálogo */
+.dialog-card {
+  background-color: #444;
+  color: white;
+}
+
+/* Cartão de descanso */
+.rest-timer-card {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+}
+
+/* Select do cronômetro de descanso */
+.rest-select {
+  background-color: #444;
+  color: white;
+}
+
+.rest-select .q-field__native {
+  color: white;
+}
+  
   @media (max-width: 600px) {
   .container {
     max-width: 90%;
