@@ -347,85 +347,41 @@ export default {
   background-color: #1c1c1c;
 }
 
-/* Cartão de cronômetro total */
-.total-timer-card {
+/* Botão com hover */
+.q-btn:hover {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Cartões */
+.total-timer-card,
+.rest-timer-card,
+.custom-card {
   background-color: #333;
   color: white;
   padding: 1rem;
 }
 
-/* Cartão de diálogo */
 .dialog-card {
   background-color: #444;
   color: white;
 }
 
-/* Cartão de descanso */
-.rest-timer-card {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
+.custom-card .q-card-section {
+  border-bottom: 1px solid #444;
+}
+
+.custom-card-actions {
+  background-color: #444;
 }
 
 /* Select do cronômetro de descanso */
-.rest-select {
-  background-color: #444;
-  color: white;
-}
-
-.rest-select .q-field__native {
-  color: white;
-}
-  
-  @media (max-width: 600px) {
-  .container {
-    max-width: 90%;
-  }
-  }
-
-  .q-btn:hover {
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  .custom-dialog {
-  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
-}
-
-.custom-card {
-  background-color: #333; /* Cor de fundo do cartão */
-  color: white; /* Cor do texto dentro do cartão */
-}
-
-.custom-card .q-card-section {
-  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
-}
-
-.custom-card-actions {
-  background-color: #444; /* Cor de fundo das ações do cartão */
-}
-/* Estilos personalizados para o diálogo */
-.custom-dialog {
-  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
-}
-
-.custom-card {
-  background-color: #333; /* Cor de fundo do cartão */
-  color: white; /* Cor do texto dentro do cartão */
-}
-
-.custom-card .q-card-section {
-  border-bottom: 1px solid #444; /* Borda para separar o cabeçalho do corpo */
-}
-
-.custom-card-actions {
-  background-color: #444; /* Cor de fundo das ações do cartão */
-}
-  
-  /* Estilo adicional */
+.rest-select,
+.q-field__control,
 .q-field__native,
 .q-field__prefix,
 .q-field__suffix,
 .q-field__input {
+  background-color: #444;
   color: white;
 }
 
@@ -438,8 +394,15 @@ export default {
   color: white;
 }
 
-.q-field__control {
-  color: white;
+/* Diálogos personalizados */
+.custom-dialog {
+  backdrop-filter: blur(5px); /* Efeito de desfoque no fundo */
 }
 
+/* Responsividade */
+@media (max-width: 600px) {
+  .container {
+    max-width: 90%;
+  }
+}
 </style>
