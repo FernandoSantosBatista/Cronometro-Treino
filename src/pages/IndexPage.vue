@@ -4,7 +4,7 @@
       <!-- Cronômetro Total -->
       <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
         <q-card-section>
-          <div class="text-h5 text-bold text-center">Cronômetro Total</div>
+          <div class="text-h5 text-bold text-center">Tempo Total</div>
 
           <div class="row justify-center q-gutter-sm q-mt-sm">
   <!-- Botão Salvar -->
@@ -79,7 +79,7 @@
       <!-- Cronômetro de Descanso -->
       <q-card flat bordered class="full-width q-px-md q-py-sm" style="background-color: #333; color: white;">
         <q-card-section>
-          <div class="text-h5 text-bold text-center">Cronômetro</div>
+          <div class="text-h5 text-bold text-center">Tempo</div>
           <q-select
             v-model="selectedTime"
             :options="timeOptions"
