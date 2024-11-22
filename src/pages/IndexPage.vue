@@ -8,16 +8,17 @@
 
           <div class="row justify-center q-gutter-sm q-mt-sm">
   <!-- Botão Salvar -->
-  <q-btn
-    flat
-    round
-    dense
-    icon="save"
-    color="positive"
-    @click="saveTotalTime"
-    label="Salvar"
-    class="q-mr-xs"
-  />
+  <!-- Botão Salvar -->
+<q-btn
+  flat
+  round
+  dense
+  icon="save"
+  color="positive"
+  @click="timerStore.saveTotalTime"
+  label="Salvar"
+  class="q-mr-xs"
+/>
 
   <!-- Botão Pausar -->
   <q-btn
