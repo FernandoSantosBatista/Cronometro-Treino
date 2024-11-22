@@ -1,16 +1,16 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="q-pa-md flex flex-center">
     <div class="container text-center">
       <!-- Título -->
-      <h1>Treinamento</h1>
+      <h1 class="text-h5 text-bold">Treinamento</h1>
 
-      <!-- Cronômetro -->
-      <div class="q-my-md text-h4">
-        {{ timerStore.formattedTotalTime }}
+      <!-- Exibição do cronômetro -->
+      <div class="q-my-md">
+        <span class="text-h4">{{ timerStore.formattedTotalTime }}</span>
       </div>
 
-      <!-- Botões -->
-      <div class="q-mt-md">
+      <!-- Botões de controle -->
+      <div class="row justify-center q-my-md">
         <!-- Botão Salvar -->
         <q-btn
           flat
@@ -18,41 +18,51 @@
           dense
           icon="save"
           color="positive"
-          @click="timerStore.saveTotalTime"
           label="Salvar"
-          class="q-mr-xs"
-        />
-
-        <!-- Botão Pausar -->
-        <q-btn
-          v-if="timerStore.showResetTotal"
-          flat
-          round
-          dense
-          icon="pause"
-          color="negative"
-          @click="timerStore.requestTotalTimeReset"
-          label="Pausar"
+          @click="timerStore.saveTotalTime"
         />
 
         <!-- Botão Iniciar -->
+        <q-btn
+          v-if="!timerStore.isRunning"
+          flat
+          round
+          dense
+          icon="play_arrow"
+          color="primary"
+          label="Iniciar"
+          class="q-ml-sm"
+          @click="timerStore.startTotalTimer"
+        />
+
+        <!-- Botão Pausar -->
         <q-btn
           v-else
           flat
           round
           dense
-          icon="play_arrow"
-          color="positive"
-          @click="timerStore.startTotalTimer"
-          label="Iniciar"
+          icon="pause"
+          color="negative"
+          label="Pausar"
+          class="q-ml-sm"
+          @click="timerStore.requestTotalTimeReset"
         />
       </div>
 
-      <!-- Diálogo de Confirmação de Reset -->
+      <!-- Lista de tempos salvos -->
+      <q-list bordered separator class="q-my-md">
+        <q-item v-for="(time, index) in timerStore.savedTimes" :key="index">
+          <q-item-section>
+            {{ time }}
+          </q-item-section>
+        </q-item>
+      </q-list>
+
+      <!-- Diálogo de confirmação de reset -->
       <q-dialog v-model="timerStore.showConfirmation">
         <q-card>
           <q-card-section>
-            <div class="text-h6">Tem certeza que deseja pausar?</div>
+            <div class="text-h6">Deseja pausar o cronômetro?</div>
           </q-card-section>
           <q-card-actions align="right">
             <q-btn flat label="Cancelar" color="primary" @click="timerStore.cancelReset" />
@@ -61,7 +71,7 @@
         </q-card>
       </q-dialog>
 
-      <!-- Diálogo de Confirmação de Salvar -->
+      <!-- Diálogo de confirmação de salvar -->
       <q-dialog v-model="timerStore.showSaveConfirmation">
         <q-card>
           <q-card-section>
@@ -81,11 +91,10 @@ import { useTimerStore } from "../stores/useTimerStore";
 
 export default {
   setup() {
-    // Referência da store
     const timerStore = useTimerStore();
 
     return {
-      timerStore, // Adiciona a store para uso no template
+      timerStore,
     };
   },
 };
@@ -93,7 +102,7 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 400px;
+  max-width: 500px;
   margin: auto;
 }
 </style>
