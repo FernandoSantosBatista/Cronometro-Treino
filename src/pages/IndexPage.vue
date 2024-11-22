@@ -106,14 +106,15 @@
 </template>
 
 <script>
-import { useTimerStore } from '../stores/useTimerStore';
+import { useTimerStore } from "../stores/useTimerStore";
 
 export default {
   setup() {
     const timerStore = useTimerStore();
-    timerStore.initializeTimerWorker();
 
-    return { ...timerStore };
+    return {
+      timerStore, // Adicione a store ao retorno
+    };
   },
 };
 </script>
